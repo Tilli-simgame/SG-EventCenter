@@ -281,32 +281,34 @@ document.getElementById('registration-form').addEventListener('submit', function
 });
 
 // Update the loadParticipants function with better error handling
+let autoShuffleDone = false;  // Global flag to track if auto-shuffle has been performed
+
 function loadParticipants() {
     fetch(`data/${eventName}.json`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to load participants data');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             let participantsDiv = document.getElementById('participants');
             participantsDiv.innerHTML = '';
 
-            // Check if there are any classes
-            if (Object.keys(data.classes).length === 0) {
-                participantsDiv.innerHTML = '<div class="alert alert-info">No participants registered yet.</div>';
-                return;
+            const currentDate = new Date();  // Get the current date
+            const lastDate = new Date(data.lastDate);  // Parse the lastDate directly from JSON (yyyy-mm-dd)
+
+            let allClassesFull = true;
+
+            // Check if we need to auto-shuffle after the last date
+            if (currentDate > lastDate && !autoShuffleDone) {
+                // Call the backend to auto-shuffle results only if not already done
+                autoShuffleResults();  // Trigger shuffle, but don't return early
             }
 
+            // Continue loading the participants, even if shuffling is triggered
             for (let className in data.classes) {
                 const currentParticipants = data.classes[className].length;
                 const maxParticipants = data.rules.maxHorsesPerClass;
 
                 let classDiv = document.createElement('div');
                 classDiv.className = 'mb-4';
-                
-                // Add class title
+
                 classDiv.innerHTML = `
                     <h4 class="text-secondary">
                         ${className} 
@@ -335,14 +337,14 @@ function loadParticipants() {
                     });
 
                     classDiv.appendChild(resultList);
-
-                    // If results are available, don't show the participant list.
                 } else {
+                    allClassesFull = false;
+
                     // Create and show participant list only if there are no results
                     let participantList = document.createElement('ul');
                     participantList.className = 'list-group';
 
-                    if (data.classes[className].length === 0) {
+                    if (currentParticipants === 0) {
                         let emptyItem = document.createElement('li');
                         emptyItem.className = 'list-group-item text-muted';
                         emptyItem.innerText = 'No participants in this class yet';
@@ -364,19 +366,53 @@ function loadParticipants() {
 
                 participantsDiv.appendChild(classDiv);
             }
+
+            if (allClassesFull) {
+                disableRegistrationForm();
+            }
         })
-        .catch(error => {
-            console.error('Error loading participants:', error);
-            const participantsDiv = document.getElementById('participants');
-            participantsDiv.innerHTML = `
-                <div class="alert alert-danger">
-                    Error loading participants data. Please try refreshing the page.
-                </div>
-            `;
-        });
+        .catch(error => console.error('Error loading participants:', error));
 }
 
-        document.addEventListener('DOMContentLoaded', loadParticipants);
+function autoShuffleResults() {
+    fetch('backend/auto_shuffle.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `event_name=${eventName}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log(data.success);
+            if (data.shuffled_classes) {
+                console.log('Shuffled classes:', data.shuffled_classes);
+            }
+            autoShuffleDone = true;  // Set flag to prevent further shuffles
+            loadParticipants();  // Reload the participants to reflect the shuffled results
+        } else {
+            console.error('Auto-shuffle error:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error auto-shuffling results:', error);
+    });
+}
+
+function disableRegistrationForm() {
+    const form = document.getElementById('registration-form');
+    form.querySelectorAll('input, button').forEach(input => input.disabled = true);
+
+    // Display a message to inform the user
+    const formDiv = form.parentElement;
+    const message = document.createElement('div');
+    message.className = 'alert alert-info mt-3';
+    message.innerText = 'All classes are full. Registration is closed.';
+    formDiv.appendChild(message);
+}
+
+  document.addEventListener('DOMContentLoaded', loadParticipants);
 
         function formatDate(dateStr) {
             const [year, month, day] = dateStr.split('-');
