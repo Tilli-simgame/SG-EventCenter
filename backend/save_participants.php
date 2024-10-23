@@ -1,10 +1,14 @@
 <?php
 // Get the event name dynamically from the POST request
 $eventName = $_POST['event_name'];
+$riderName = $_POST['rider_name'];
+$email = $_POST['email'];  // Email field if you have it in the form
+$horses = $_POST['horse'];  // Array of horses
+$classes = $_POST['class'];  // Array of corresponding classes
 
-// Validate the event name to avoid security risks (injection)
-if (!preg_match('/^[a-zA-Z0-9_-]+$/', $eventName)) {
-    echo json_encode(['error' => 'Invalid event name']);
+// Honeypot bot protection
+if (!empty($_POST['honeypot'])) {
+    echo json_encode(['error' => 'Bot detected!']);
     exit;
 }
 
@@ -15,21 +19,14 @@ $participantsFile = "../data/$eventName.json";
 if (!file_exists($participantsFile)) {
     echo json_encode(['error' => 'Event not found']);
     exit;
-} 
+}
 
 $participantsData = json_decode(file_get_contents($participantsFile), true);
-
-// Extract the rules from the JSON file
 $rules = $participantsData['rules'];
 
-// Get POST data
-$riderName = $_POST['rider_name'];
-$horses = $_POST['horse'];
-$classes = $_POST['class'];
-
-// Check rule: Max horses per class
+// Process the form and apply the rules (same as before)
 foreach ($classes as $index => $className) {
-    $horseName = $horses[$index];
+    $horseName = trim($horses[$index]);
 
     // Ensure the class exists in the event data
     if (!isset($participantsData['classes'][$className])) {
@@ -37,35 +34,14 @@ foreach ($classes as $index => $className) {
         exit;
     }
 
+    // Check if the horse name is not empty (skip empty fields)
+    if (empty($horseName)) {
+        continue;  // Skip empty horse name inputs
+    }
+
     // Rule: Check if the class is full
     if (count($participantsData['classes'][$className]) >= $rules['maxHorsesPerClass']) {
-        echo json_encode(['error' => "Class $className is full (max {$rules['maxHorsesPerClass']} horses)."]);
-        exit;
-    }
-
-    // Rule: Check if the horse is already registered in too many classes
-    $horseEntries = 0;
-    foreach ($participantsData['classes'] as $classParticipants) {
-        foreach ($classParticipants as $participant) {
-            if ($participant['horse'] === $horseName) {
-                $horseEntries++;
-            }
-        }
-    }
-    if ($horseEntries >= $rules['maxClassesPerHorse']) {
-        echo json_encode(['error' => "Horse $horseName has already entered in {$rules['maxClassesPerHorse']} classes."]);
-        exit;
-    }
-
-    // Rule: Check if the rider already has too many horses in this class
-    $riderEntriesInClass = 0;
-    foreach ($participantsData['classes'][$className] as $participant) {
-        if ($participant['rider'] === $riderName) {
-            $riderEntriesInClass++;
-        }
-    }
-    if ($riderEntriesInClass >= $rules['maxHorsesPerRiderInClass']) {
-        echo json_encode(['error' => "Rider $riderName already has {$rules['maxHorsesPerRiderInClass']} horses in class $className."]);
+        echo json_encode(['error' => "Class $className is full."]);
         exit;
     }
 
@@ -74,10 +50,36 @@ foreach ($classes as $index => $className) {
         'rider' => $riderName,
         'horse' => $horseName
     ];
+
+    // Check if the class is now full after adding the participant
+    if (count($participantsData['classes'][$className]) == $rules['maxHorsesPerClass']) {
+        // Class is full, generate results
+        $participants = $participantsData['classes'][$className];
+        
+        // Randomize the results
+        shuffle($participants);
+        
+        // Assign places (e.g., 1st, 2nd, 3rd, etc.)
+        $results = [];
+        foreach ($participants as $place => $participant) {
+            $results[] = [
+                'place' => $place + 1,
+                'rider' => $participant['rider'],
+                'horse' => $participant['horse']
+            ];
+        }
+        
+        // Save the results in the JSON file under "results"
+        if (!isset($participantsData['results'])) {
+            $participantsData['results'] = [];
+        }
+        
+        $participantsData['results'][$className] = $results;
+    }
 }
 
-// Save the updated data back to the event-specific JSON file
+// Save the updated data back to the JSON file
 file_put_contents($participantsFile, json_encode($participantsData, JSON_PRETTY_PRINT));
 
-echo json_encode(['success' => 'Successfully registered!']);
+echo json_encode(['success' => 'Successfully registered and results generated if the class is full!']);
 ?>

@@ -59,7 +59,7 @@
     </div>
 
     <!-- Participants Section -->
-    <h2>Current Participants</h2>
+    <h2>Participants and Results</h2>
     <div id="participants" class="mb-5">
         <!-- Participant data will be dynamically inserted here -->
     </div>
@@ -305,6 +305,8 @@ function loadParticipants() {
 
                 let classDiv = document.createElement('div');
                 classDiv.className = 'mb-4';
+                
+                // Add class title
                 classDiv.innerHTML = `
                     <h4 class="text-secondary">
                         ${className} 
@@ -312,27 +314,54 @@ function loadParticipants() {
                     </h4>
                 `;
 
-                let participantList = document.createElement('ul');
-                participantList.className = 'list-group';
+                // Check if results exist for this class
+                if (data.results && data.results[className]) {
+                    const results = data.results[className];
+                    let resultTitle = document.createElement('h5');
+                    resultTitle.className = 'mt-3 text-success';
+                    resultTitle.innerText = 'Results:';
+                    classDiv.appendChild(resultTitle);
 
-                if (data.classes[className].length === 0) {
-                    let emptyItem = document.createElement('li');
-                    emptyItem.className = 'list-group-item text-muted';
-                    emptyItem.innerText = 'No participants in this class yet';
-                    participantList.appendChild(emptyItem);
-                } else {
-                    data.classes[className].forEach(participant => {
-                        let listItem = document.createElement('li');
-                        listItem.className = 'list-group-item';
-                        listItem.innerHTML = `
-                            <i class="bi bi-person-circle"></i> ${participant.rider} - 
-                            <i class="bi bi-star"></i> ${participant.horse}
+                    let resultList = document.createElement('ul');
+                    resultList.className = 'list-group';
+
+                    results.forEach(result => {
+                        let resultItem = document.createElement('li');
+                        resultItem.className = 'list-group-item';
+                        resultItem.innerHTML = `
+                            <strong>${result.place}.</strong> ${result.rider} - ${result.horse}
                         `;
-                        participantList.appendChild(listItem);
+                        resultList.appendChild(resultItem);
                     });
+
+                    classDiv.appendChild(resultList);
+
+                    // If results are available, don't show the participant list.
+                } else {
+                    // Create and show participant list only if there are no results
+                    let participantList = document.createElement('ul');
+                    participantList.className = 'list-group';
+
+                    if (data.classes[className].length === 0) {
+                        let emptyItem = document.createElement('li');
+                        emptyItem.className = 'list-group-item text-muted';
+                        emptyItem.innerText = 'No participants in this class yet';
+                        participantList.appendChild(emptyItem);
+                    } else {
+                        data.classes[className].forEach(participant => {
+                            let listItem = document.createElement('li');
+                            listItem.className = 'list-group-item';
+                            listItem.innerHTML = `
+                                <i class="bi bi-person-circle"></i> ${participant.rider} - 
+                                <i class="bi bi-star"></i> ${participant.horse}
+                            `;
+                            participantList.appendChild(listItem);
+                        });
+                    }
+
+                    classDiv.appendChild(participantList);
                 }
 
-                classDiv.appendChild(participantList);
                 participantsDiv.appendChild(classDiv);
             }
         })

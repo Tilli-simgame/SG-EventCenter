@@ -13,7 +13,7 @@
     "organizerEmail": "j\u00e4rjest\u00e4j\u00e4n@maili.fi",
     "type": "lyhyt arvonta",
     "rules": {
-        "maxHorsesPerClass": 12,
+        "maxHorsesPerClass": 16,
         "maxClassesPerHorse": 2,
         "maxHorsesPerRiderInClass": 3
     },
@@ -78,6 +78,10 @@
             {
                 "rider": "Tirppa",
                 "horse": "Joku"
+            },
+            {
+                "rider": "Kissa",
+                "horse": "Toka testi"
             }
         ],
         "02 He A": [
@@ -124,6 +128,10 @@
             {
                 "rider": "Toka",
                 "horse": "Heppa 1.1"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Test1"
             }
         ],
         "03 He A": [
@@ -170,6 +178,90 @@
             {
                 "rider": "Toka",
                 "horse": "Testivaan"
+            }
+        ]
+    },
+    "results": {
+        "01 He A": [
+            {
+                "place": 1,
+                "rider": "Ratsastaja",
+                "horse": "Test"
+            },
+            {
+                "place": 2,
+                "rider": "Kissa",
+                "horse": "Koni"
+            },
+            {
+                "place": 3,
+                "rider": "Kissa",
+                "horse": "Toka testi"
+            },
+            {
+                "place": 4,
+                "rider": "Tirppa",
+                "horse": "Koni"
+            },
+            {
+                "place": 5,
+                "rider": "Tilli 3",
+                "horse": "Name 11"
+            },
+            {
+                "place": 6,
+                "rider": "Tirppa",
+                "horse": "Joku"
+            },
+            {
+                "place": 7,
+                "rider": "Tillinen",
+                "horse": "Toka testi"
+            },
+            {
+                "place": 8,
+                "rider": "Tilli",
+                "horse": "Heppanen"
+            },
+            {
+                "place": 9,
+                "rider": "Anni",
+                "horse": "Test"
+            },
+            {
+                "place": 10,
+                "rider": "Tilli",
+                "horse": "Test1"
+            },
+            {
+                "place": 11,
+                "rider": "Tirppa",
+                "horse": "Hevonen"
+            },
+            {
+                "place": 12,
+                "rider": "Tilli 2",
+                "horse": "Heppa 1.1"
+            },
+            {
+                "place": 13,
+                "rider": "Tilli 3",
+                "horse": "Name 13"
+            },
+            {
+                "place": 14,
+                "rider": "Tilli 2",
+                "horse": "Heppa 1.2"
+            },
+            {
+                "place": 15,
+                "rider": "Tilli",
+                "horse": "Test1-2"
+            },
+            {
+                "place": 16,
+                "rider": "Tilli 3",
+                "horse": "Name 10"
             }
         ]
     }
