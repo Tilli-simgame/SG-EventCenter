@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Competitions</title>
+</head>
+<body>
+
+    <h1>Current and Upcoming Events</h1>
+    <p>Testi...</p>
+    <ul id="events-list">
+        <!-- The event list will be populated here dynamically -->
+    </ul>
+
+    <script>
+        // Fetch the event list from the backend PHP script
+        /*
+        fetch('backend/list_events.php')
+            .then(response => response.json())
+            .then(events => {
+                const eventsList = document.getElementById('events-list');
+                
+                events.forEach(event => {
+                    const listItem = document.createElement('li');
+                    
+                    // Create a link to the event's HTML page
+                    const eventLink = document.createElement('a');
+                    eventLink.href = `events/${event.htmlFile}`;
+                    eventLink.innerText = `${event.name} - Event Date: ${formatDate(event.date)} (Last Day to Enter: ${formatDate(event.lastDate)})`;
+
+                    // Append the link to the list item
+                    listItem.appendChild(eventLink);
+                    
+                    // Append the list item to the event list
+                    eventsList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error fetching event list:', error));
+
+        // Helper function to format dates
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString();
+
+        }
+            */
+    </script>
+
+</body>
+</html>

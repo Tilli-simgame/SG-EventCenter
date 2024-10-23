@@ -1,0 +1,176 @@
+{
+    "date": "2024-04-10",
+    "lastDate": "2024-04-05",
+    "classList": [
+        "01 He A",
+        "02 He A",
+        "03 He A"
+    ],
+    "assoc": "villit",
+    "location": "J\u00e4rjestyspaikka",
+    "locationUrl": "www.google.com",
+    "organizer": "J\u00e4rjest\u00e4j\u00e4n Nimi",
+    "organizerEmail": "j\u00e4rjest\u00e4j\u00e4n@maili.fi",
+    "type": "lyhyt arvonta",
+    "rules": {
+        "maxHorsesPerClass": 12,
+        "maxClassesPerHorse": 2,
+        "maxHorsesPerRiderInClass": 3
+    },
+    "classes": {
+        "01 He A": [
+            {
+                "rider": "Tilli",
+                "horse": "Test1"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Test1-2"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 1.1"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 1.2"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 10"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 11"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 13"
+            },
+            {
+                "rider": "Anni",
+                "horse": "Test"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Heppanen"
+            },
+            {
+                "rider": "Tillinen",
+                "horse": "Toka testi"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Koni"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Hevonen"
+            },
+            {
+                "rider": "Kissa",
+                "horse": "Koni"
+            },
+            {
+                "rider": "Ratsastaja",
+                "horse": "Test"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Joku"
+            }
+        ],
+        "02 He A": [
+            {
+                "rider": "Tilli",
+                "horse": "Test2"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Test2-2"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 2.1"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 21"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 22"
+            },
+            {
+                "rider": "Anni",
+                "horse": "pal"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Mehil\u00e4inen"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Mehil\u00e4inen"
+            },
+            {
+                "rider": "Anni",
+                "horse": "Kissa"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Toinen"
+            },
+            {
+                "rider": "Toka",
+                "horse": "Heppa 1.1"
+            }
+        ],
+        "03 He A": [
+            {
+                "rider": "Tilli",
+                "horse": "Test3"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Test3-2"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 3.1"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 3.2"
+            },
+            {
+                "rider": "Tilli 2",
+                "horse": "Heppa 3.3"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 31"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 32"
+            },
+            {
+                "rider": "Tilli 3",
+                "horse": "Name 33"
+            },
+            {
+                "rider": "Anni",
+                "horse": "jas"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Vaan"
+            },
+            {
+                "rider": "Toka",
+                "horse": "Testivaan"
+            }
+        ]
+    }
+}
