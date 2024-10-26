@@ -62,8 +62,3 @@ jobs:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_DD20B4FD8ECE401280E7D6DE3801508E }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B3C1001CD9DB48CDAF31EC5333916407 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DEAC24B0C69F40DDBFB7A5180C7F76F9 }}
-
-      - name: Clean up old files on Azure App Service
-        run: |
-          az webapp delete --name OakHillEventPark-backend --resource-group SG-EventPark
-          az webapp create --resource-group SG-EventPark --plan ASP-SGEventPark-9a93 --name
