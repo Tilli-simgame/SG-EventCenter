@@ -1,425 +1,325 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dressage Event</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Dressage Event Registration</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container mt-4">
+<body>
+    <div class="container py-4">
+        <h1 id="event-title" class="text-center">Dressage Event Registration</h1>
 
-    <h1 id="event-title" class="text-center">Dressage Event Registration</h1>
+        <div class="row my-4">
+            <div class="col-md-6">
+                <h2 id="event-date"></h2>
+                <p id="last-entry-date"></p>
+            </div>
+            <div class="col-md-6 text-end">
+            </div>
+        </div>
 
-    <!-- Event details -->
-    <div class="row my-4">
-        <div class="col-md-6">
-            <h2 id="event-date"></h2>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h3>Event Information</h3>
+                <ul id="event-info" class="list-group">
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h3>Event Rules</h3>
+                <ul id="event-rules" class="list-group">
+                </ul>
+            </div>
         </div>
-        <div class="col-md-6 text-end">
-            <p id="last-entry-date" class="text-muted"></p>
-        </div>
-    </div>
 
-    <!-- Event Information and Rules Section -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <h3>Event Information</h3>
-            <ul id="event-info" class="list-group">
-                <!-- Event info will be dynamically inserted here -->
-            </ul>
-        </div>
-        <div class="col-md-6">
-            <h3>Event Rules</h3>
-            <ul id="event-rules" class="list-group">
-                <!-- Rules will be dynamically inserted here -->
-            </ul>
-        </div>
-    </div>
+        <div class="card mb-5">
+            <div class="card-header">
+                <h3 id="register-for-the-event" class="card-title">Register for the Event</h3>
+            </div>
 
-    <!-- Registration form inside a Bootstrap card -->
-    <div class="card mb-5">
-        <div class="card-header">
-            <h3 class="card-title">Register for the Event</h3>
+            <div class="card-body">
+                <form id="registrationForm">
+                    <input type="hidden" name="honeypot" id="honeypot">
+                    <input type="hidden" name="event_name" id="event_name">
+                    
+                    <div class="mb-4">
+                        <label for="rider_name" class="form-label">Rider's Name:</label>
+                        <input type="text" class="form-control" id="rider_name" name="rider_name" required>
+                    </div>
+
+                    <div id="class-containers">
+                        <!-- Class sections will be populated here -->
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form id="registration-form">
-                <div class="mb-3">
-                    <label for="rider_name" class="form-label">Rider's Name:</label>
-                    <input type="text" id="rider_name" name="rider_name" class="form-control" required>
+
+        <h2>Participants and Results</h2>
+        <div id="participants" class="mb-5"></div>
+
+        <!-- Error Modal -->
+        <div id="errorModal" class="modal fade" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 id="errorModalLabel" class="modal-title">Error</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-error-message" class="alert alert-warning"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
-
-                <div id="classes" class="mb-3">
-                    <!-- Classes will be dynamically inserted here -->
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
 
-    <!-- Participants Section -->
-    <h2>Participants and Results</h2>
-    <div id="participants" class="mb-5">
-        <!-- Participant data will be dynamically inserted here -->
-    </div>
-
-    <!-- Error Modal (Bootstrap) -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="errorModalLabel">Error</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div id="modal-error-message" class="alert alert-warning"></div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- Bootstrap JS (needed for Bootstrap functionality) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script>
-
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+        function formatDate(dateStr) {
+            const [year, month, day] = dateStr.split('-').map(num => parseInt(num));
+            const date = new Date(year, month - 1, day); // month is 0-based in JavaScript
+            return date.toLocaleDateString('fi-FI');
         }
 
-        const eventName = getQueryParam('event');
-
-        if (!eventName) {
-            alert("No event specified!");
-            window.location.href = "index.html";
+        function isRegistrationClosed(lastDateStr) {
+            // Get current date at midnight for fair comparison
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            
+            // Parse the YYYY-MM-DD date
+            const [year, month, day] = lastDateStr.split('-').map(num => parseInt(num));
+            const lastDate = new Date(year, month - 1, day); // month is 0-based in JavaScript
+            
+            return currentDate > lastDate;
         }
 
-        let maxHorsesPerRiderInClass = 0;
-
-        // Fetch and populate event data
-        fetch(`data/${eventName}.json`)
-    .then(response => response.json())
-    .then(data => {
-        document.getElementById('event-title').innerText = `Dressage Event Registration for ${formatDate(data.date)}`;
-        document.getElementById('event-date').innerText = `Event Date: ${formatDate(data.date)}`;
-        document.getElementById('last-entry-date').innerText = `Last Day to Enter: ${formatDate(data.lastDate)}`;
-
-        // Display event info
-        const infoDiv = document.getElementById('event-info');
-        infoDiv.innerHTML = `
-            <li class="list-group-item">Organizer: ${data.organizer}</li>
-            <li class="list-group-item">Email: <a href="mailto:${data.organizerEmail}">${data.organizerEmail}</a></li>
-            <li class="list-group-item">Association: ${data.assoc}</li>
-            <li class="list-group-item">Location: <a href="https://${data.locationUrl}" target="_blank">${data.location}</a></li>
-            <li class="list-group-item">Event Type: ${data.type}</li>
-        `;
-
-        // Display rules
-        const rulesDiv = document.getElementById('event-rules');
-        rulesDiv.innerHTML = `
-            <li class="list-group-item">Max Horses per Class: ${data.rules.maxHorsesPerClass}</li>
-            <li class="list-group-item">Max Classes per Horse: ${data.rules.maxClassesPerHorse}</li>
-            <li class="list-group-item">Max Horses per Rider in Class: ${data.rules.maxHorsesPerRiderInClass}</li>
-        `;
-
-        // Dynamically generate classes and forms
-        const classesDiv = document.getElementById('classes');
-        data.classList.forEach(className => {
-            const classGroupDiv = document.createElement('div');
-            classGroupDiv.classList.add('mb-3');
-
-            const currentParticipants = data.classes[className] ? data.classes[className].length : 0;
-            const maxParticipants = data.rules.maxHorsesPerClass;
-
-            // Create the class title dynamically
-            const classTitle = document.createElement('h3');
-            classTitle.innerText = `${className} (${currentParticipants}/${maxParticipants})`;
-            classTitle.classList.add('text-primary');
-            classGroupDiv.appendChild(classTitle);
-
-            // Create warning message under the class title
-            const errorMessage = document.createElement('div');
-            errorMessage.classList.add('alert', 'alert-warning', 'mt-2');
-            errorMessage.style.display = 'none';  // Hidden by default
-            classGroupDiv.appendChild(errorMessage);
-
-            const horseDiv = document.createElement('div');
-            horseDiv.classList.add('mb-3');
-
-            if (currentParticipants >= maxParticipants) {
-                // If the class is full, show a warning message and hide input fields and add more button
-                const fullClassMessage = document.createElement('div');
-                fullClassMessage.classList.add('alert', 'alert-warning');
-                fullClassMessage.innerText = 'This class is full. No more participants allowed.';
-                classGroupDiv.appendChild(fullClassMessage);
-            } else {
-                // Class is not full, allow registration
-                let horseCount = 1;
-
-                // Function to add horse input fields
-                function addHorseInput() {
-                    const horseInputWrapper = document.createElement('div');
-                    horseInputWrapper.classList.add('d-flex', 'mb-2', 'align-items-center');
-
-                    const horseInput = document.createElement('input');
-                    horseInput.setAttribute('type', 'text');
-                    horseInput.setAttribute('name', 'horse[]');
-                    horseInput.setAttribute('placeholder', 'Horse name');
-                    horseInput.classList.add('form-control', 'me-2');
-
-                    const removeButton = document.createElement('button');
-                    removeButton.setAttribute('type', 'button');
-                    removeButton.classList.add('btn', 'btn-danger');
-                    removeButton.innerText = 'Remove';
-
-                    // Event listener for the remove button
-                    removeButton.addEventListener('click', () => {
-                        horseDiv.removeChild(horseInputWrapper);
-                        horseCount--;
-                        addButton.disabled = false; // Re-enable "Add More" button
-                        errorMessage.style.display = 'none'; // Hide error message
-                    });
-
-                    horseInputWrapper.appendChild(horseInput);
-                    horseInputWrapper.appendChild(removeButton);
-                    horseDiv.appendChild(horseInputWrapper);
+        async function fetchEventData(eventName) {
+            try {
+                // First check if results need to be generated
+                const checkResponse = await fetch(`backend/check_results.php?event=${eventName}`);
+                const checkData = await checkResponse.json();
+                
+                if (checkData.error) {
+                    showError(checkData.error);
+                    return;
                 }
+                
+                // Use the updated event data
+                const data = checkData.eventData;
+                
+                // Populate event information
+                document.getElementById('event-title').innerText = `Dressage Event Registration for ${formatDate(data.date)}`;
+                document.getElementById('event-date').innerText = `Event Date: ${formatDate(data.date)}`;
+                document.getElementById('last-entry-date').innerText = `Last Day to Enter: ${formatDate(data.lastDate)}`;
+                
+                // Display event info
+                const infoDiv = document.getElementById('event-info');
+                infoDiv.innerHTML = `
+                    <li class="list-group-item">Organizer: ${data.organizer}</li>
+                    <li class="list-group-item">Email: <a href="mailto:${data.organizerEmail}">${data.organizerEmail}</a></li>
+                    <li class="list-group-item">Association: ${data.assoc}</li>
+                    <li class="list-group-item">Location: <a href="https://${data.locationUrl}" target="_blank">${data.location}</a></li>
+                    <li class="list-group-item">Event Type: ${data.type}</li>
+                `;
+                
+                // Display rules
+                const rulesDiv = document.getElementById('event-rules');
+                rulesDiv.innerHTML = `
+                    <li class="list-group-item">Max Horses per Class: ${data.rules.maxHorsesPerClass}</li>
+                    <li class="list-group-item">Max Classes per Horse: ${data.rules.maxClassesPerHorse}</li>
+                    <li class="list-group-item">Max Horses per Rider in Class: ${data.rules.maxHorsesPerRiderInClass}</li>
+                `;
+                
+                // Create class sections
+                const classContainer = document.getElementById('class-containers');
+                classContainer.innerHTML = ''; // Clear existing content
+                Object.entries(data.classes).forEach(([className, participants]) => {
+                    const classSection = createClassSection(
+                        className, 
+                        data.rules.maxHorsesPerRiderInClass,
+                        participants.length,
+                        data.rules.maxHorsesPerClass
+                    );
+                    classContainer.appendChild(classSection);
+                });
+                
+                // Display participants
+                displayParticipants(data);
+                
+                // Check if registration period has ended
+                if (isRegistrationClosed(data.lastDate)) {
+                    const form = document.getElementById('registrationForm');
+                    form.querySelectorAll('input, button').forEach(element => {
+                        element.disabled = true;
+                    });
+                    form.insertAdjacentHTML('beforebegin', 
+                        '<div class="alert alert-warning">Registration period has ended</div>'
+                    );
+                }
+                
+            } catch (error) {
+                showError('Error loading event data');
+                console.error(error);
+            }
+        }
 
-                addHorseInput(); // Add the first horse input field
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get event data from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const eventName = urlParams.get('event');
+            
+            if (!eventName) {
+                showError('No event specified');
+                return;
+            }
 
-                const classInput = document.createElement('input');
-                classInput.setAttribute('type', 'hidden');
-                classInput.setAttribute('name', 'class[]');
-                classInput.setAttribute('value', className);
-                horseDiv.appendChild(classInput);
+            document.getElementById('event_name').value = eventName;
 
-                const addButton = document.createElement('button');
-                addButton.setAttribute('type', 'button');
-                addButton.classList.add('btn', 'btn-secondary', 'mt-2');
-                addButton.innerText = 'Add more';
+            // Fetch event data
+            fetchEventData(eventName);
 
-                addButton.addEventListener('click', function () {
-                    if (horseCount < data.rules.maxHorsesPerRiderInClass) {
-                        horseCount++;
-                        addHorseInput(); // Add another horse input field
-                    } else {
-                        // Disable the button and show the warning
-                        addButton.disabled = true;
-                        errorMessage.style.display = 'block';
-                        errorMessage.innerText = `You cannot add more than ${data.rules.maxHorsesPerRiderInClass} horses in this class.`;
+            // Form submission
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Prepare form data
+                const formData = new FormData();
+                formData.append('event_name', document.getElementById('event_name').value);
+                formData.append('rider_name', document.getElementById('rider_name').value);
+                
+                // Collect all non-empty horse inputs
+                const classes = [];
+                const horses = [];
+                
+                document.querySelectorAll('.horse-input').forEach(input => {
+                    if (input.value.trim()) {
+                        classes.push(input.dataset.class);
+                        horses.push(input.value.trim());
                     }
                 });
-
-                classGroupDiv.appendChild(horseDiv);
-                classGroupDiv.appendChild(addButton);
-            }
-
-            classesDiv.appendChild(classGroupDiv);
+                
+                // Append arrays to form data
+                horses.forEach((horse, index) => {
+                    formData.append('class[]', classes[index]);
+                    formData.append('horse[]', horse);
+                });
+                
+                fetch('backend/save_participants.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        showError(data.error);
+                    } else {
+                        // Refresh the page to show updated participants
+                        location.reload();
+                    }
+                })
+                .catch(error => showError('Error saving registration'));
+            });
         });
-    })
-    .catch(error => {
-        console.error('Error loading event data:', error);
-        alert('Error loading event data.');
-    });
 
-
-        // Update the form submission code in your event.html
-document.getElementById('registration-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const formData = new FormData(this);
-    formData.append('event_name', eventName);
-
-    // Update the path to point to the correct PHP file location
-    fetch('./backend/save_participants.php', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            // Show success message using Bootstrap modal or alert
-            const successAlert = document.createElement('div');
-            successAlert.className = 'alert alert-success alert-dismissible fade show';
-            successAlert.innerHTML = `
-                <strong>Success!</strong> ${data.success}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            `;
-            document.getElementById('registration-form').prepend(successAlert);
+        function createClassSection(className, maxHorsesPerRider, currentParticipants, maxParticipants) {
+            const section = document.createElement('div');
+            section.className = 'class-section mb-4';
             
-            // Reset form and reload participants
-            this.reset();
-            loadParticipants();
-        } else {
-            // Show error in Bootstrap modal
-            const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-            document.getElementById('modal-error-message').innerText = data.error;
-            errorModal.show();
-        }
-    })
-    .catch(error => {
-        
-        console.error('Error:', error);
-        // Show error in Bootstrap modal
-        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-        document.getElementById('modal-error-message').innerText = 'An error occurred while processing your request.';
-        errorModal.show();
-    });
-});
-
-// Update the loadParticipants function with better error handling
-let autoShuffleDone = false;  // Global flag to track if auto-shuffle has been performed
-
-function loadParticipants() {
-    fetch(`data/${eventName}.json`)
-        .then(response => response.json())
-        .then(data => {
-            let participantsDiv = document.getElementById('participants');
-            participantsDiv.innerHTML = '';
-
-            const currentDate = new Date();  // Get the current date
-            const lastDate = new Date(data.lastDate);  // Parse the lastDate directly from JSON (yyyy-mm-dd)
-
-            let allClassesFull = true;
-
-            // Check if we need to auto-shuffle after the last date
-            if (currentDate > lastDate && !autoShuffleDone) {
-                // Call the backend to auto-shuffle results only if not already done
-                autoShuffleResults();  // Trigger shuffle, but don't return early
-            }
-
-            // Continue loading the participants, even if shuffling is triggered
-            for (let className in data.classes) {
-                const currentParticipants = data.classes[className].length;
-                const maxParticipants = data.rules.maxHorsesPerClass;
-
-                let classDiv = document.createElement('div');
-                classDiv.className = 'mb-4';
-
-                classDiv.innerHTML = `
-                    <h4 class="text-secondary">
-                        ${className} 
-                        <small class="text-muted">(${currentParticipants}/${maxParticipants})</small>
-                    </h4>
+            // Create class title with counts
+            const classTitle = document.createElement('h4');
+            classTitle.innerText = `${className} (${currentParticipants}/${maxParticipants})`;
+            classTitle.classList.add('text-primary', 'mb-3');
+            section.appendChild(classTitle);
+            
+            const inputsContainer = document.createElement('div');
+            inputsContainer.className = 'horse-inputs';
+            
+            // Create horse input fields
+            for (let i = 0; i < maxHorsesPerRider; i++) {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'mb-2';
+                inputDiv.innerHTML = `
+                    <input type="text" 
+                           class="form-control horse-input" 
+                           placeholder="Horse name" 
+                           data-class="${className}">
                 `;
+                inputsContainer.appendChild(inputDiv);
+            }
+            
+            section.appendChild(inputsContainer);
+            return section;
+        }
 
-                // Check if results exist for this class
-                if (data.results && data.results[className]) {
-                    const results = data.results[className];
-                    let resultTitle = document.createElement('h5');
-                    resultTitle.className = 'mt-3 text-success';
-                    resultTitle.innerText = 'Results:';
-                    classDiv.appendChild(resultTitle);
+        function displayParticipants(data) {
+            const container = document.getElementById('participants');
+            container.innerHTML = '';
 
-                    let resultList = document.createElement('ul');
-                    resultList.className = 'list-group';
+            // Display registered participants
+            Object.entries(data.classes).forEach(([className, participants]) => {
+                const classDiv = document.createElement('div');
+                classDiv.className = 'mb-4';
+                
+                // Create class header with participant count
+                const header = document.createElement('h3');
+                header.innerText = `${className} (${participants.length}/${data.rules.maxHorsesPerClass})`;
+                header.classList.add('text-primary');
+                classDiv.appendChild(header);
 
-                    results.forEach(result => {
-                        let resultItem = document.createElement('li');
-                        resultItem.className = 'list-group-item';
-                        resultItem.innerHTML = `
-                            <strong>${result.place}.</strong> ${result.rider} - ${result.horse}
-                        `;
-                        resultList.appendChild(resultItem);
+                const list = document.createElement('ul');
+                list.className = 'list-group';
+                
+                participants.forEach(p => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.textContent = `${p.rider} - ${p.horse}`;
+                    list.appendChild(li);
+                });
+
+                classDiv.appendChild(list);
+                container.appendChild(classDiv);
+            });
+
+            // Display results if available
+            if (data.results && Object.keys(data.results).length > 0) {
+                const resultsDiv = document.createElement('div');
+                resultsDiv.innerHTML = '<h2>Results</h2>';
+                
+                Object.entries(data.results).forEach(([className, results]) => {
+                    const classResults = document.createElement('div');
+                    classResults.className = 'mb-4';
+                    
+                    const header = document.createElement('h3');
+                    header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
+                    header.classList.add('text-primary');
+                    classResults.appendChild(header);
+
+                    const list = document.createElement('ul');
+                    list.className = 'list-group';
+                    
+                    results.forEach(r => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item';
+                        li.textContent = `${r.place}. ${r.rider} - ${r.horse}`;
+                        list.appendChild(li);
                     });
 
-                    classDiv.appendChild(resultList);
-                } else {
-                    allClassesFull = false;
-
-                    // Create and show participant list only if there are no results
-                    let participantList = document.createElement('ul');
-                    participantList.className = 'list-group';
-
-                    if (currentParticipants === 0) {
-                        let emptyItem = document.createElement('li');
-                        emptyItem.className = 'list-group-item text-muted';
-                        emptyItem.innerText = 'No participants in this class yet';
-                        participantList.appendChild(emptyItem);
-                    } else {
-                        data.classes[className].forEach(participant => {
-                            let listItem = document.createElement('li');
-                            listItem.className = 'list-group-item';
-                            listItem.innerHTML = `
-                                <i class="bi bi-person-circle"></i> ${participant.rider} - 
-                                <i class="bi bi-star"></i> ${participant.horse}
-                            `;
-                            participantList.appendChild(listItem);
-                        });
-                    }
-
-                    classDiv.appendChild(participantList);
-                }
-
-                participantsDiv.appendChild(classDiv);
+                    classResults.appendChild(list);
+                    resultsDiv.appendChild(classResults);
+                });
+                container.appendChild(resultsDiv);
             }
-
-            if (allClassesFull) {
-                disableRegistrationForm();
-            }
-        })
-        .catch(error => console.error('Error loading participants:', error));
-}
-
-function autoShuffleResults() {
-    fetch('backend/auto_shuffle.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `event_name=${eventName}`
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            console.log(data.success);
-            if (data.shuffled_classes) {
-                console.log('Shuffled classes:', data.shuffled_classes);
-            }
-            autoShuffleDone = true;  // Set flag to prevent further shuffles
-            loadParticipants();  // Reload the participants to reflect the shuffled results
-        } else {
-            console.error('Auto-shuffle error:', data.error);
         }
-    })
-    .catch(error => {
-        console.error('Error auto-shuffling results:', error);
-    });
-}
 
-function disableRegistrationForm() {
-    const form = document.getElementById('registration-form');
-    form.querySelectorAll('input, button').forEach(input => input.disabled = true);
-
-    // Display a message to inform the user
-    const formDiv = form.parentElement;
-    const message = document.createElement('div');
-    message.className = 'alert alert-info mt-3';
-    message.innerText = 'All classes are full. Registration is closed.';
-    formDiv.appendChild(message);
-}
-
-  document.addEventListener('DOMContentLoaded', loadParticipants);
-
-        function formatDate(dateStr) {
-            const [year, month, day] = dateStr.split('-');
-            return `${day}.${month}.${year}`;
+        function showError(message) {
+            document.getElementById('modal-error-message').textContent = message;
+            new bootstrap.Modal(document.getElementById('errorModal')).show();
         }
     </script>
-
 </body>
 </html>

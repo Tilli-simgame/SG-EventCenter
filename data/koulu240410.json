@@ -1,11 +1,9 @@
 {
-    "date": "2024-04-10",
-    "lastDate": "2024-04-05",
+    "date": "2024-11-10",
+    "lastDate": "2024-11-05",
     "classList": [
         "01 He A",
-        "02 He A",
-        "03 He A",
-        "04 He C"
+        "02 He A"
     ],
     "assoc": "villit",
     "location": "J\u00e4rjestyspaikka",
@@ -14,478 +12,176 @@
     "organizerEmail": "j\u00e4rjest\u00e4j\u00e4n@maili.fi",
     "type": "lyhyt arvonta",
     "rules": {
-        "maxHorsesPerClass": 26,
+        "maxHorsesPerClass": 50,
         "maxClassesPerHorse": 2,
         "maxHorsesPerRiderInClass": 3
     },
     "classes": {
         "01 He A": [
             {
-                "rider": "Tilli",
-                "horse": "Test1"
-            },
-            {
-                "rider": "Tilli",
-                "horse": "Test1-2"
-            },
-            {
-                "rider": "Tilli 2",
-                "horse": "Heppa 1.1"
-            },
-            {
-                "rider": "Tilli 2",
-                "horse": "Heppa 1.2"
-            },
-            {
-                "rider": "Tilli 3",
-                "horse": "Name 10"
-            },
-            {
-                "rider": "Tilli 3",
-                "horse": "Name 11"
-            },
-            {
-                "rider": "Tilli 3",
-                "horse": "Name 13"
-            },
-            {
-                "rider": "Anni",
-                "horse": "Test"
-            },
-            {
-                "rider": "Tilli",
-                "horse": "Heppanen"
-            },
-            {
-                "rider": "Tillinen",
-                "horse": "Toka testi"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Koni"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Hevonen"
-            },
-            {
                 "rider": "Kissa",
-                "horse": "Koni"
+                "horse": "kissa 1"
+            },
+            {
+                "rider": "sadfsdf",
+                "horse": "Kissa 1"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "Heppa 1"
+            },
+            {
+                "rider": "Tirppa",
+                "horse": "Heppa 1"
             },
             {
                 "rider": "Ratsastaja",
-                "horse": "Test"
+                "horse": "Keppi 1"
             },
             {
-                "rider": "Tirppa",
-                "horse": "Joku"
+                "rider": "Ratsastaja",
+                "horse": "Keppi 1"
             },
             {
-                "rider": "Kissa",
-                "horse": "Toka testi"
-            }
-        ],
-        "02 He A": [
-            {
-                "rider": "Tilli",
-                "horse": "Test2"
+                "rider": "ASD",
+                "horse": "asd"
             },
             {
-                "rider": "Tilli",
-                "horse": "Test2-2"
-            },
-            {
-                "rider": "Tilli 2",
-                "horse": "Heppa 2.1"
-            },
-            {
-                "rider": "Tilli 3",
-                "horse": "Name 21"
-            },
-            {
-                "rider": "Tilli 3",
-                "horse": "Name 22"
-            },
-            {
-                "rider": "Anni",
-                "horse": "pal"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Mehil\u00e4inen"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Mehil\u00e4inen"
-            },
-            {
-                "rider": "Anni",
-                "horse": "Kissa"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Toinen"
-            },
-            {
-                "rider": "Toka",
-                "horse": "Heppa 1.1"
-            },
-            {
-                "rider": "Tilli",
-                "horse": "Test1"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "dasdasd"
-            },
-            {
-                "rider": "Tilli",
-                "horse": "ASDasd"
-            },
-            {
-                "rider": "sdaf",
+                "rider": "ASDa",
                 "horse": "asdf"
             },
             {
                 "rider": "asdfasdf",
-                "horse": "Name 10"
+                "horse": "asdfdf"
+            },
+            {
+                "rider": "asfasdf",
+                "horse": "asfasdfsaf"
+            },
+            {
+                "rider": "ASDASD",
+                "horse": "AFDASDF"
+            },
+            {
+                "rider": "gjhfjgj",
+                "horse": "asfsadf"
+            },
+            {
+                "rider": "asdfsaf",
+                "horse": "sadf 1"
+            },
+            {
+                "rider": "asdfsaf",
+                "horse": "asdf 2"
+            },
+            {
+                "rider": "asdfsaf",
+                "horse": "asdfasdf 3"
+            },
+            {
+                "rider": "Ratsastaja 02",
+                "horse": "Heppanen 01"
+            },
+            {
+                "rider": "Ratsastaja 02",
+                "horse": "Heppanen 02"
+            },
+            {
+                "rider": "Ratsastaja 02",
+                "horse": "Heppanen 03"
+            },
+            {
+                "rider": "testaaja 00",
+                "horse": "Luokka 01 01"
+            },
+            {
+                "rider": "testaaja 00",
+                "horse": "Luokka 01 02"
+            },
+            {
+                "rider": "testaaja 00",
+                "horse": "Luokka 01 03"
+            },
+            {
+                "rider": "Kissa 01",
+                "horse": "Heppanen 01 01"
+            },
+            {
+                "rider": "Kissa 01",
+                "horse": "Heppanen 01 02"
+            },
+            {
+                "rider": "Kissa 01",
+                "horse": "Heppanen 01 03"
+            },
+            {
+                "rider": "asdfasdf 01",
+                "horse": "Jokunen 01"
+            },
+            {
+                "rider": "asdfasdf 01",
+                "horse": "Jokunen 02"
+            },
+            {
+                "rider": "asdfasdf 01",
+                "horse": "Jokunen 03"
+            },
+            {
+                "rider": "asdfasdf",
+                "horse": "asdf"
+            },
+            {
+                "rider": "dhfjdg",
+                "horse": "Koni 91"
+            },
+            {
+                "rider": "dhfjdg",
+                "horse": "Koni 74"
             }
         ],
-        "03 He A": [
+        "02 He A": [
             {
-                "rider": "Tilli",
-                "horse": "Test3"
+                "rider": "testaaja 00",
+                "horse": "Luokka 02 01"
             },
             {
-                "rider": "Tilli",
-                "horse": "Test3-2"
+                "rider": "testaaja 00",
+                "horse": "Luokka 02 02"
             },
             {
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.1"
+                "rider": "testaaja 00",
+                "horse": "Luokka 02 03"
             },
             {
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.2"
+                "rider": "asdfasdf 01",
+                "horse": "Niinojoo 01"
             },
             {
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.3"
+                "rider": "asdfasdf 01",
+                "horse": "Niinojoo 02"
             },
             {
-                "rider": "Tilli 3",
-                "horse": "Name 31"
+                "rider": "asdfasdf 01",
+                "horse": "Niinojoo 03"
             },
             {
-                "rider": "Tilli 3",
-                "horse": "Name 32"
+                "rider": "aasdfsadf",
+                "horse": "asdfasdfshghjkhgj"
             },
             {
-                "rider": "Tilli 3",
-                "horse": "Name 33"
+                "rider": "aasdfsadf",
+                "horse": "asdfasdffdgh"
+            },
+            {
+                "rider": "aasdfsadf",
+                "horse": "asdffghjghjfg"
             },
             {
                 "rider": "Anni",
-                "horse": "jas"
-            },
-            {
-                "rider": "Tirppa",
-                "horse": "Vaan"
-            },
-            {
-                "rider": "Toka",
-                "horse": "Testivaan"
-            },
-            {
-                "rider": "Tilli",
-                "horse": "ASDasd"
-            },
-            {
-                "rider": "AFsdf",
-                "horse": "adfgs"
-            },
-            {
-                "rider": "erf",
-                "horse": "fghfg"
-            },
-            {
-                "rider": "ytrerawe",
-                "horse": "asdfefw"
-            },
-            {
-                "rider": "Vika",
-                "horse": "Olenko"
-            }
-        ],
-        "04 He C": [
-            {
-                "rider": "gfjgl",
-                "horse": "ll\u00f6kM"
-            },
-            {
-                "rider": "ergsdhdfhgkfg",
-                "horse": "vbncbnvbxn"
+                "horse": "Annin eka heppa"
             }
         ]
     },
     "results": {
-        "01 He A": [
-            {
-                "place": 1,
-                "rider": "Tilli",
-                "horse": "Test1"
-            },
-            {
-                "place": 2,
-                "rider": "Kissa",
-                "horse": "Koni"
-            },
-            {
-                "place": 3,
-                "rider": "Tilli 3",
-                "horse": "Name 10"
-            },
-            {
-                "place": 4,
-                "rider": "Tirppa",
-                "horse": "Joku"
-            },
-            {
-                "place": 5,
-                "rider": "Tilli 2",
-                "horse": "Heppa 1.1"
-            },
-            {
-                "place": 6,
-                "rider": "Kissa",
-                "horse": "Toka testi"
-            },
-            {
-                "place": 7,
-                "rider": "Tilli 3",
-                "horse": "Name 13"
-            },
-            {
-                "place": 8,
-                "rider": "Ratsastaja",
-                "horse": "Test"
-            },
-            {
-                "place": 9,
-                "rider": "Tirppa",
-                "horse": "Hevonen"
-            },
-            {
-                "place": 10,
-                "rider": "Anni",
-                "horse": "Test"
-            },
-            {
-                "place": 11,
-                "rider": "Tilli 2",
-                "horse": "Heppa 1.2"
-            },
-            {
-                "place": 12,
-                "rider": "Tilli",
-                "horse": "Heppanen"
-            },
-            {
-                "place": 13,
-                "rider": "Tilli",
-                "horse": "Test1-2"
-            },
-            {
-                "place": 14,
-                "rider": "Tillinen",
-                "horse": "Toka testi"
-            },
-            {
-                "place": 15,
-                "rider": "Tilli 3",
-                "horse": "Name 11"
-            },
-            {
-                "place": 16,
-                "rider": "Tirppa",
-                "horse": "Koni"
-            }
-        ],
-        "02 He A": [
-            {
-                "place": 1,
-                "rider": "Tilli",
-                "horse": "Test2-2"
-            },
-            {
-                "place": 2,
-                "rider": "Tilli 2",
-                "horse": "Heppa 2.1"
-            },
-            {
-                "place": 3,
-                "rider": "Tirppa",
-                "horse": "Toinen"
-            },
-            {
-                "place": 4,
-                "rider": "Anni",
-                "horse": "Kissa"
-            },
-            {
-                "place": 5,
-                "rider": "Tilli",
-                "horse": "Test1"
-            },
-            {
-                "place": 6,
-                "rider": "Tirppa",
-                "horse": "Mehil\u00e4inen"
-            },
-            {
-                "place": 7,
-                "rider": "Tilli",
-                "horse": "Test2"
-            },
-            {
-                "place": 8,
-                "rider": "asdfasdf",
-                "horse": "Name 10"
-            },
-            {
-                "place": 9,
-                "rider": "Toka",
-                "horse": "Heppa 1.1"
-            },
-            {
-                "place": 10,
-                "rider": "Anni",
-                "horse": "pal"
-            },
-            {
-                "place": 11,
-                "rider": "Tilli 3",
-                "horse": "Name 22"
-            },
-            {
-                "place": 12,
-                "rider": "Tilli",
-                "horse": "ASDasd"
-            },
-            {
-                "place": 13,
-                "rider": "Tirppa",
-                "horse": "Mehil\u00e4inen"
-            },
-            {
-                "place": 14,
-                "rider": "Tirppa",
-                "horse": "dasdasd"
-            },
-            {
-                "place": 15,
-                "rider": "sdaf",
-                "horse": "asdf"
-            },
-            {
-                "place": 16,
-                "rider": "Tilli 3",
-                "horse": "Name 21"
-            }
-        ],
-        "03 He A": [
-            {
-                "place": 1,
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.1"
-            },
-            {
-                "place": 2,
-                "rider": "Tilli",
-                "horse": "ASDasd"
-            },
-            {
-                "place": 3,
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.2"
-            },
-            {
-                "place": 4,
-                "rider": "Tirppa",
-                "horse": "Vaan"
-            },
-            {
-                "place": 5,
-                "rider": "erf",
-                "horse": "fghfg"
-            },
-            {
-                "place": 6,
-                "rider": "ytrerawe",
-                "horse": "asdfefw"
-            },
-            {
-                "place": 7,
-                "rider": "Anni",
-                "horse": "jas"
-            },
-            {
-                "place": 8,
-                "rider": "Tilli 3",
-                "horse": "Name 32"
-            },
-            {
-                "place": 9,
-                "rider": "Vika",
-                "horse": "Olenko"
-            },
-            {
-                "place": 10,
-                "rider": "AFsdf",
-                "horse": "adfgs"
-            },
-            {
-                "place": 11,
-                "rider": "Tilli",
-                "horse": "Test3-2"
-            },
-            {
-                "place": 12,
-                "rider": "Tilli 3",
-                "horse": "Name 31"
-            },
-            {
-                "place": 13,
-                "rider": "Toka",
-                "horse": "Testivaan"
-            },
-            {
-                "place": 14,
-                "rider": "Tilli 3",
-                "horse": "Name 33"
-            },
-            {
-                "place": 15,
-                "rider": "Tilli 2",
-                "horse": "Heppa 3.3"
-            },
-            {
-                "place": 16,
-                "rider": "Tilli",
-                "horse": "Test3"
-            }
-        ],
-        "04 He C": [
-            {
-                "place": 1,
-                "rider": "ergsdhdfhgkfg",
-                "horse": "vbncbnvbxn"
-            },
-            {
-                "place": 2,
-                "rider": "gfjgl",
-                "horse": "ll\u00f6kM"
-            }
-        ]
     }
 }
