@@ -26,10 +26,13 @@ jobs:
         run: |
           rm -rf backend  # Remove the backend folder to prevent it from being deployed
 
-      - name: Replace Production URL in config.js
+      - name: Replace Production URL and ENV in config.js
         if: github.ref == 'refs/heads/main' # Only for main branch deployments
         run: |
-          sed -i 's|__PRODUCTION_BASE_URL__|${{ secrets.PRODUCTION_BASE_URL }}|g' config.js    
+          # Replace the BASE_URL placeholder with the actual production URL
+          sed -i 's|__PRODUCTION_BASE_URL__|${{ secrets.PRODUCTION_BASE_URL }}|g' config.js
+          # Set ENV to production
+          sed -i 's|const ENV = "development"|const ENV = "production"|g' config.js
 
       - name: Build And Deploy
         id: builddeploy
