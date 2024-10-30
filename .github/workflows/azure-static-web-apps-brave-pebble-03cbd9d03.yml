@@ -26,6 +26,11 @@ jobs:
         run: |
           rm -rf backend  # Remove the backend folder to prevent it from being deployed
 
+      - name: Replace Production URL in config.js
+        if: github.ref == 'refs/heads/main' # Only for main branch deployments
+        run: |
+          sed -i 's|__PRODUCTION_BASE_URL__|${{ secrets.PRODUCTION_BASE_URL }}|g' config.js    
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
