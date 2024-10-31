@@ -8,6 +8,13 @@
 </head>
 <body>
     <div class="container py-4">
+        <div class="text-end">
+            <label for="languageSelector" class="form-label">Language:</label>
+            <select id="languageSelector" class="form-select" style="width: auto; display: inline-block;">
+                <option value="en">English</option>
+                <option value="fi" selected>Suomi</option>
+            </select>
+        </div>
         <h1 id="event-title" class="text-center">Dressage Event Registration</h1>
 
         <div class="row my-4">
@@ -21,12 +28,12 @@
 
         <div class="row mb-4">
             <div class="col-md-6">
-                <h3>Event Information</h3>
+                <h3 id="event-info-title">Event Information</h3>
                 <ul id="event-info" class="list-group">
                 </ul>
             </div>
             <div class="col-md-6">
-                <h3>Event Rules</h3>
+                <h3 id="event-rules-title">Event Rules</h3>
                 <ul id="event-rules" class="list-group">
                 </ul>
             </div>
@@ -56,7 +63,7 @@
             </div>
         </div>
 
-        <h2>Participants and Results</h2>
+        <h2 id="participants-results-title">Participants and Results</h2>
         <div id="participants" class="mb-5"></div>
 
         <!-- Error Modal -->
@@ -80,7 +87,15 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
     <script src="config.js"></script>
+    <script src="translations.js"></script>
     <script>
+
+        // Translation function
+        function translate(key, replacements = {}, language = 'en') {
+            const translation = translations[language][key] || translations['en'][key] || '';
+            return translation.replace(/\${(.*?)}/g, (_, k) => replacements[k] || '');
+        }
+
         function formatDate(dateStr) {
             const [year, month, day] = dateStr.split('-').map(num => parseInt(num));
             const date = new Date(year, month - 1, day); // month is 0-based in JavaScript
@@ -112,8 +127,17 @@
                 return 10;
             }
 
+            function applyStaticTranslations(language = 'fi') {
+        document.getElementById('event-info-title').innerText = translate('eventInfoTitle', {}, language);
+        document.getElementById('event-rules-title').innerText = translate('eventRulesTitle', {}, language);
+        document.getElementById('register-for-the-event').innerText = translate('registerForEvent', {}, language);
+        document.querySelector('label[for="rider_name"]').innerText = translate('ridersName', {}, language);
+        document.querySelector('button[type="submit"]').innerText = translate('submitButton', {}, language);
+        document.getElementById('participants-results-title').innerText = translate('participantsResultsTitle', {}, language);
+        //document.getElementById('horse-name').innerText = translate('horseName', {}, language);
+    }
 
-        async function fetchEventData(eventName) {
+        async function fetchEventData(eventName, language = 'fi') {
             try {
                 // First check if results need to be generated
                 const checkResponse = await fetch(window.API_URL + `/check_results.php?event=${eventName}`);
@@ -127,27 +151,30 @@
                 // Use the updated event data
                 const data = checkData.eventData;
                 
+                const formattedDate = formatDate(data.date);
+                const lastEntryDate = formatDate(data.lastDate);
+
                 // Populate event information
-                document.getElementById('event-title').innerText = `Dressage Event Registration for ${formatDate(data.date)}`;
-                document.getElementById('event-date').innerText = `Event Date: ${formatDate(data.date)}`;
-                document.getElementById('last-entry-date').innerText = `Last Day to Enter: ${formatDate(data.lastDate)}`;
+                document.getElementById('event-title').innerText = translate('title', { date: formattedDate }, language);
+                document.getElementById('event-date').innerText = translate('eventDate', { date: formattedDate }, language);
+                document.getElementById('last-entry-date').innerText = translate('lastEntryDate', { lastDate: lastEntryDate }, language);
                 
                 // Display event info
                 const infoDiv = document.getElementById('event-info');
                 infoDiv.innerHTML = `
-                    <li class="list-group-item">Organizer: ${data.organizer}</li>
-                    <li class="list-group-item">Email: <a href="mailto:${data.organizerEmail}">${data.organizerEmail}</a></li>
-                    <li class="list-group-item">Association: ${data.assoc}</li>
-                    <li class="list-group-item">Location: <a href="https://${data.locationUrl}" target="_blank">${data.location}</a></li>
-                    <li class="list-group-item">Event Type: ${data.type}</li>
+                    <li class="list-group-item">${translate('organizer', { organizer: data.organizer }, language)}</li>
+                    <li class="list-group-item">${translate('email', { email: data.organizerEmail }, language)}</li>
+                    <li class="list-group-item">${translate('association', { association: data.assoc }, language)}</li>
+                    <li class="list-group-item">${translate('location', { location: data.location, url: data.locationUrl }, language)}</li>
+                    <li class="list-group-item">${translate('eventType', { type: data.type }, language)}</li>
                 `;
                 
                 // Display rules
                 const rulesDiv = document.getElementById('event-rules');
                 rulesDiv.innerHTML = `
-                    <li class="list-group-item">Max Horses per Class: ${data.rules.maxHorsesPerClass}</li>
-                    <li class="list-group-item">Max Classes per Horse: ${data.rules.maxClassesPerHorse}</li>
-                    <li class="list-group-item">Max Horses per Rider in Class: ${data.rules.maxHorsesPerRiderInClass}</li>
+                    <li class="list-group-item">${translate('maxHorsesPerClass', { maxHorsesPerClass: data.rules.maxHorsesPerClass }, language)}</li>
+                    <li class="list-group-item">${translate('maxClassesPerHorse', { maxClassesPerHorse: data.rules.maxClassesPerHorse }, language)}</li>
+                    <li class="list-group-item">${translate('maxHorsesPerRiderInClass', { maxHorsesPerRiderInClass: data.rules.maxHorsesPerRiderInClass }, language)}</li>
                 `;
                 
                 // Create class sections
@@ -158,7 +185,8 @@
                         className, 
                         data.rules.maxHorsesPerRiderInClass,
                         participants.length,
-                        data.rules.maxHorsesPerClass
+                        data.rules.maxHorsesPerClass,
+                        language
                     );
                     classContainer.appendChild(classSection);
                 });
@@ -187,7 +215,8 @@
             // Get event data from URL
             const urlParams = new URLSearchParams(window.location.search);
             const eventName = urlParams.get('event');
-            
+            const languageSelector = document.getElementById('languageSelector');
+
             if (!eventName) {
                 showError('No event specified');
                 return;
@@ -196,7 +225,15 @@
             document.getElementById('event_name').value = eventName;
 
             // Fetch event data
-            fetchEventData(eventName);
+            fetchEventData(eventName, languageSelector.value);
+            applyStaticTranslations(languageSelector.value);
+
+            // Handle language change
+        languageSelector.addEventListener('change', () => {
+            const selectedLanguage = languageSelector.value;
+            fetchEventData(eventName, selectedLanguage);
+            applyStaticTranslations(selectedLanguage);
+        });
 
             // Form submission
             document.getElementById('registrationForm').addEventListener('submit', function(e) {
@@ -241,7 +278,7 @@
             });
         });
 
-        function createClassSection(className, maxHorsesPerRider, currentParticipants, maxParticipants) {
+        function createClassSection(className, maxHorsesPerRider, currentParticipants, maxParticipants, language) {
             const section = document.createElement('div');
             section.className = 'class-section mb-4';
             
@@ -260,8 +297,8 @@
                 inputDiv.className = 'mb-2';
                 inputDiv.innerHTML = `
                     <input type="text" 
-                           class="form-control horse-input" 
-                           placeholder="Horse name" 
+                           class="form-control horse-input"
+                           placeholder="${translate('placeholderHorseName', {}, language)}" 
                            data-class="${className}">
                 `;
                 inputsContainer.appendChild(inputDiv);
