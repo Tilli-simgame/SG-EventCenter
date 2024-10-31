@@ -99,6 +99,20 @@
             return currentDate > lastDate;
         }
 
+        function getNumberToBold(totalParticipants) {
+                if (totalParticipants <= 3) return 1;
+                if (totalParticipants <= 8) return 2;
+                if (totalParticipants <= 15) return 3;
+                if (totalParticipants <= 24) return 4;
+                if (totalParticipants <= 35) return 5;
+                if (totalParticipants <= 48) return 6;
+                if (totalParticipants <= 63) return 7;
+                if (totalParticipants <= 80) return 8;
+                if (totalParticipants <= 99) return 9;
+                return 10;
+            }
+
+
         async function fetchEventData(eventName) {
             try {
                 // First check if results need to be generated
@@ -290,6 +304,8 @@
             if (data.results && Object.keys(data.results).length > 0) {
                 const resultsDiv = document.createElement('div');
                 resultsDiv.innerHTML = '<h2>Results</h2>';
+
+                const numToBold = getNumberToBold(participants.length);
                 
                 Object.entries(data.results).forEach(([className, results]) => {
                     const classResults = document.createElement('div');
@@ -303,10 +319,10 @@
                     const list = document.createElement('ul');
                     list.className = 'list-group';
                     
-                    results.forEach(r => {
+                    results.forEach((r, index) => {
                         const li = document.createElement('li');
                         li.className = 'list-group-item';
-                        li.textContent = `${r.place}. ${r.rider} - ${r.horse}`;
+                        li.innerHTML = `${r.place}. ${index < numToBold ? '<strong>' : ''}${r.rider} - ${r.horse}${index < numToBold ? '</strong>' : ''}`;
                         list.appendChild(li);
                     });
 
