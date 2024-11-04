@@ -1,4 +1,13 @@
 <?php
+require '../vendor/autoload.php';
+
+// Load the .env file from the root directory
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load(); 
+
+//$sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
+$sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
+
 header('Content-Type: application/json');
 
 class ResultGenerator {
@@ -88,6 +97,7 @@ try {
 
     $eventName = $_POST['event_name'];
     $riderName = trim($_POST['rider_name']);
+    $userEmail = trim($_POST['email']);
     $classes = $_POST['class'];
     $horses = $_POST['horse'];
 
@@ -230,6 +240,47 @@ try {
         throw new Exception('Failed to save registration data');
     }
 
+    // Email Validation and Sending via SendGrid
+    if (!empty($userEmail)) {
+
+      if (!$sendGridApiKey) {
+        die("SendGrid API key is not set.");
+      }
+
+      if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+          $emailContent = "Dear $riderName,\n\nThank you for registering for the event '$eventName'.\n\n";
+          $emailContent .= "Event Date: " . $eventData['date'] . "\n";
+          $emailContent .= "Last Day to Register: " . $eventData['lastDate'] . "\n";
+          $emailContent .= "Event URL: " . $_SERVER['HTTP_REFERER'] . "\n\n";
+          $emailContent .= "Classes and Horses:\n";
+          foreach ($registrations as $reg) {
+              $emailContent .= "- Class: {$reg['class']}, Horse: {$reg['horse']}\n";
+          }
+          $emailContent .= "\nBest Regards,\nThe Event Team";
+  
+          // Create a new Mail object, here named $mail instead of $email
+          $mail = new \SendGrid\Mail\Mail();
+          $mail->setFrom("tilli.sim@pm.me", "Oak Hill Event Park");
+          $mail->setSubject("Registration Confirmation for $eventName");
+          $mail->addTo($userEmail, $riderName);
+          $mail->addContent("text/plain", $emailContent);
+  
+          $sendgrid = new \SendGrid($sendGridApiKey);
+  
+          try {
+              $response = $sendgrid->send($mail);
+              if ($response->statusCode() >= 400) {
+                  throw new Exception("Failed to send email: " . $response->statusCode());
+              }
+          } catch (Exception $e) {
+              echo json_encode(['error' => 'Failed to send confirmation email']);
+              exit;
+          }
+      } else {
+          echo json_encode(['error' => 'Invalid email format.']);
+          exit;
+      }
+  }
     echo json_encode([
         'success' => 'Registration successful',
         'resultsGenerated' => $resultsGenerated

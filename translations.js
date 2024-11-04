@@ -2,7 +2,7 @@
 
 const translations = {
     en: {
-        title: "Dressage Event Registration for ${date}",
+        title: "Event Registration",
         eventDate: "Event Date: ${date}",
         lastEntryDate: "Last Day to Enter: ${lastDate}",
         organizer: "Organizer: ${organizer}",
@@ -22,8 +22,8 @@ const translations = {
         placeholderHorseName: "Horse's Name"
     },
     fi: {
-        title: "Kouluratsastustapahtuman Ilmoittautuminen ${date}",
-        eventDate: "Tapahtuman Päivämäärä: ${date}",
+        title: "Kisakutsu",
+        eventDate: "Kisapäivä: ${date}",
         lastEntryDate: "Viimeinen Ilmoittautumispäivä: ${lastDate}",
         organizer: "Järjestäjä: ${organizer}",
         email: "Sähköposti: <a href='mailto:${email}'>${email}</a>",

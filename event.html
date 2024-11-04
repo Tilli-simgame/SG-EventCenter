@@ -15,7 +15,7 @@
                 <option value="fi" selected>Suomi</option>
             </select>
         </div>
-        <h1 id="event-title" class="text-center">Dressage Event Registration</h1>
+        <h1 id="event-title" class="text-center">Event registration</h1>
 
         <div class="row my-4">
             <div class="col-md-6">
@@ -53,6 +53,11 @@
                         <label for="rider_name" class="form-label">Rider's Name:</label>
                         <input type="text" class="form-control" id="rider_name" name="rider_name" required>
                     </div>
+
+                    <div class="mb-4">
+                      <label for="email" class="form-label">Email Address:</label>
+                      <input type="email" class="form-control" id="email" name="email" required>
+                  </div>
 
                     <div id="class-containers">
                         <!-- Class sections will be populated here -->
@@ -243,6 +248,7 @@
                 const formData = new FormData();
                 formData.append('event_name', document.getElementById('event_name').value);
                 formData.append('rider_name', document.getElementById('rider_name').value);
+                formData.append('email', document.getElementById('email').value);
                 
                 // Collect all non-empty horse inputs
                 const classes = [];
