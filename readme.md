@@ -39,17 +39,19 @@ competitions/
     git clone https://github.com/Tilli-simgame/SG-EventCenter.git
     ```
 
-2. **Asenna PHPMailer** (valinnainen, jos käytät PHPMaileria):
+2. **Asenna Composer** (valinnainen, vain jos haluat käyttää sähköposti varmistusta):
     ```bash
-    composer require phpmailer/phpmailer
+    php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    php -r "if (hash_file('sha384', 'composer-setup.php') === 'dac665fdc30fdd8ec78b38b9800061b4150413ff2e3b6f88543c636f7cd84f6db9189d43a81e5503cda447da73c7e5b6') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+    php composer-setup.php
+    php -r "unlink('composer-setup.php');"
     ```
 
-3. **Aseta Google reCAPTCHA**:
-    - Mene osoitteeseen [Google reCAPTCHA](https://www.google.com/recaptcha/) ja rekisteröi sivustosi saadaksesi *Site Key* ja *Secret Key*.
-    - Lisää *Site Key* HTML-lomakkeeseen ja *Secret Key* PHP-tiedostoon.
+3. **Asenna Sendgird** (valinnainen, vain jos haluat käyttää sähköposti varmistusta):
+```$`composer require sendgrid/sendgrid```
 
-4. **Määritä SMTP** (jos käytät PHPMaileria):
-    - Päivitä `backend/save_participants.php` PHPMailerin asetukset (SMTP-palvelin, käyttäjänimi ja salasana).
+4. **Asenna PHPdotenv** (valinnainen, vain jos haluat käyttää sähköposti varmistusta):
+```$ composer require vlucas/phpdotenv```
 
 5. **Palvelimen konfigurointi**:
     - Varmista, että PHP-palvelin on oikein asennettu ja PHP-tiedostot käsitellään oikein.
