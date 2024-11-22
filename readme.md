@@ -5,7 +5,7 @@ Tämä projekti on virtuaalinen "Simppeli" Kisakeskus järjestelmä, jossa osall
 ## Ominaisuudet
 
 - Osallistujat voivat ilmoittaa hevosia eri luokkiin tapahtuman päivämäärän ja sääntöjen mukaisesti.
-- Järjestelmä käyttää Google reCAPTCHA -järjestelmää ja hunajapurkki-tekniikkaa estääkseen bottien roskapostin.
+- Järjestelmä käyttää Google reCAPTCHA -järjestelmää ja hunajapurkki-tekniikkaa estääkseen bottien roskapostin. !! TODO !!
 - Osallistujat saavat halutessaan ilmoittautumisen jälkeen sähköpostin, joka vahvistaa rekisteröinnin ja sisältää tapahtuman URL-osoitteen, päivämäärän ja osallistuneet hevoset luokittain.
 - Tapahtumien tiedot, kuten säännöt ja luokat, tallennetaan JSON-tiedostoihin.
 - Lomake tukee rekisteröitymistä useilla hevosilla ja luokilla tapahtuman sääntöjen mukaisesti.
@@ -48,7 +48,7 @@ competitions/
     ```
 
 3. **Asenna Sendgird** (valinnainen, vain jos haluat käyttää sähköposti varmistusta):
-```$`composer require sendgrid/sendgrid```
+```$ composer require sendgrid/sendgrid```
 
 4. **Asenna PHPdotenv** (valinnainen, vain jos haluat käyttää sähköposti varmistusta):
 ```$ composer require vlucas/phpdotenv```
@@ -66,9 +66,11 @@ competitions/
    - Ylittääkö hevosten tai ratsastajien määrä sallitut rajat luokassa.
    - Onko sama hevonen ilmoitettu useampaan luokkaan kuin säännöt sallivat.
 3. Jos ilmoittautuminen onnistuu lisätään hevoset kuhunkin luokkaan.
-4. Jos osallistuja on klikannut haluavansa kopion sähköpostiin lähetetään lopuksi varmistusmaili osallistumisesta.
+4. Jos osallistuja on klikannut haluavansa kopion sähköpostiin lähetetään lopuksi varmistusmaili osallistumisesta (vain mikäli sendgrid otettu käyttöön).
 
 ### Botin havaitseminen
+
+!! TODO !!
 
 - **Google reCAPTCHA**: Lomake käyttää Google reCAPTCHA v2 -suojaa estääkseen automatisoituja botteja lähettämästä lomaketta.
 - **Hunajapurkki-kenttä**: Lomakkeessa on piilotettu kenttä (honeypot), jonka useimmiten vain botit täyttävät, ja tällöin lomake hylätään.
