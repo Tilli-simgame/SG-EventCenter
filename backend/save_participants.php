@@ -1,12 +1,12 @@
 <?php
 require '../vendor/autoload.php';
 
-// Load the .env file from the root directory
-$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-$dotenv->load(); 
+// jos haluat käyttää sähköpostiin lähetystä, poista kahdesta alla olevasta rivistä kommentoinnit pois
+// $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+// $dotenv->load(); 
 
-//$sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
-$sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
+// jotta voit lähettää sähköpostiin varmistusviestin sinulla tulee olla sendgridAPI key
+// $sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
 
 header('Content-Type: application/json');
 
