@@ -250,7 +250,7 @@
                 const formData = new FormData();
                 formData.append('event_name', document.getElementById('event_name').value);
                 formData.append('rider_name', document.getElementById('rider_name').value);
-                formData.append('email', document.getElementById('email').value);
+                // formData.append('email', document.getElementById('email').value);
                 
                 // Collect all non-empty horse inputs
                 const classes = [];
@@ -346,36 +346,87 @@
             });
 
             // Display results if available
-            if (data.results && Object.keys(data.results).length > 0) {
-                const resultsDiv = document.createElement('div');
-                resultsDiv.innerHTML = '<h2>Results</h2>';
+            // Display results if available
+if (data.results && Object.keys(data.results).length > 0) {
+    const resultsDiv = document.createElement('div');
+    resultsDiv.innerHTML = '<h2>Results</h2>';
 
-                const numToBold = getNumberToBold(participants.length);
-                
-                Object.entries(data.results).forEach(([className, results]) => {
-                    const classResults = document.createElement('div');
-                    classResults.className = 'mb-4';
-                    
-                    const header = document.createElement('h3');
-                    header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
-                    header.classList.add('text-primary');
-                    classResults.appendChild(header);
+    Object.entries(data.results).forEach(([className, results]) => {
+        // Check ruleSet and display results accordingly
+        if (data.ruleSet === "toko") {
+            // Group results by award
+            const groupedResults = results.reduce((groups, result) => {
+                if (!groups[result.award]) {
+                    groups[result.award] = [];
+                }
+                groups[result.award].push(result);
+                return groups;
+            }, {});
+
+            // Create a section for the class
+            const classResults = document.createElement('div');
+            classResults.className = 'mb-4';
+
+            const header = document.createElement('h3');
+            header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
+            header.classList.add('text-primary');
+            classResults.appendChild(header);
+
+            // Display grouped and sorted results by award
+            Object.entries(groupedResults)
+                .sort(([awardA], [awardB]) => awardA.localeCompare(awardB)) // Optional: Sort awards alphabetically
+                .forEach(([award, group]) => {
+                    const awardHeader = document.createElement('h4');
+                    awardHeader.innerText = `${award}`;
+                    awardHeader.classList.add('text-secondary', 'mt-3');
+                    classResults.appendChild(awardHeader);
 
                     const list = document.createElement('ul');
                     list.className = 'list-group';
-                    
-                    results.forEach((r, index) => {
+
+                    // Sort by points within each award group
+                    group.sort((a, b) => b.points - a.points);
+
+                    group.forEach((r) => {
                         const li = document.createElement('li');
                         li.className = 'list-group-item';
-                        li.innerHTML = `${r.place}. ${index < numToBold ? '<strong>' : ''}${r.rider} - ${r.horse}${index < numToBold ? '</strong>' : ''}`;
+                        li.innerHTML = `${r.rider} (${r.points})`;
                         list.appendChild(li);
                     });
 
                     classResults.appendChild(list);
-                    resultsDiv.appendChild(classResults);
                 });
-                container.appendChild(resultsDiv);
-            }
+
+            resultsDiv.appendChild(classResults);
+        } else {
+            // Default display logic for non-TOKO ruleSet
+            const numToBold = getNumberToBold(data.results[className].length);
+
+            const classResults = document.createElement('div');
+            classResults.className = 'mb-4';
+
+            const header = document.createElement('h3');
+            header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
+            header.classList.add('text-primary');
+            classResults.appendChild(header);
+
+            const list = document.createElement('ul');
+            list.className = 'list-group';
+
+            results.forEach((r, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.innerHTML = `${r.place}. ${index < numToBold ? '<strong>' : ''}${r.rider} - ${r.horse}${index < numToBold ? '</strong>' : ''}`;
+                list.appendChild(li);
+            });
+
+            classResults.appendChild(list);
+            resultsDiv.appendChild(classResults);
+        }
+    });
+
+    container.appendChild(resultsDiv);
+}
         }
 
         function showError(message) {

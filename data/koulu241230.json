@@ -1,6 +1,6 @@
 {
-    "date": "2026-12-30",
-    "lastDate": "2026-12-28",
+    "date": "2024-12-30",
+    "lastDate": "2024-12-28",
     "classList": [
         "01 He A",
         "02 He A"
@@ -11,27 +11,15 @@
     "organizer": "J\u00e4rjest\u00e4j\u00e4n Nimi",
     "organizerEmail": "j\u00e4rjest\u00e4j\u00e4n@maili.fi",
     "type": "lyhyt arvonta",
+    "ruleSet": "defualt",
     "rules": {
-        "maxHorsesPerClass": 50,
+        "maxHorsesPerClass": 5,
         "maxClassesPerHorse": 2,
         "maxHorsesPerRiderInClass": 3
     },
     "classes": {
-        "01 He A": [
-            {
-                "rider": "Tilli",
-                "horse": "Joku Nimi"
-            }
-        ],
-        "02 He A": [
-            {
-                "rider": "Tilli",
-                "horse": "Joku Nimi"
-            }
-        ]
-    },
-    "results": {
         "01 He A": [],
         "02 He A": []
-    }
+    },
+    "results": {}
 }

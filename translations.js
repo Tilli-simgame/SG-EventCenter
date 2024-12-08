@@ -10,16 +10,16 @@ const translations = {
         association: "Association: ${association}",
         location: "Location: <a href='https://${url}' target='_blank'>${location}</a>",
         eventType: "Event Type: ${type}",
-        maxHorsesPerClass: "Max Horses per Class: ${maxHorsesPerClass}",
-        maxClassesPerHorse: "Max Classes per Horse: ${maxClassesPerHorse}",
-        maxHorsesPerRiderInClass: "Max Horses per Rider in Class: ${maxHorsesPerRiderInClass}",
+        maxHorsesPerClass: "Max participants per Class: ${maxHorsesPerClass}",
+        maxClassesPerHorse: "Max Classes per participant: ${maxClassesPerHorse}",
+        maxHorsesPerRiderInClass: "Max participants per Owner in Class: ${maxHorsesPerRiderInClass}",
         eventInfoTitle: "Event Information",
         eventRulesTitle: "Event Rules",
         registerForEvent: "Register for the Event",
-        ridersName: "Rider's Name:",
+        ridersName: "Owner's name:",
         submitButton: "Submit",
         participantsResultsTitle: "Participants and Results",
-        placeholderHorseName: "Horse's Name"
+        placeholderHorseName: "Participant's Name"
     },
     fi: {
         title: "Kisakutsu",
@@ -30,15 +30,15 @@ const translations = {
         association: "Yhdistys: ${association}",
         location: "Sijainti: <a href='https://${url}' target='_blank'>${location}</a>",
         eventType: "Tapahtumatyyppi: ${type}",
-        maxHorsesPerClass: "Maksimi Hevosia per Luokka: ${maxHorsesPerClass}",
-        maxClassesPerHorse: "Maksimi Luokkia per Hevonen: ${maxClassesPerHorse}",
-        maxHorsesPerRiderInClass: "Maksimi Hevosia per Ratsastaja Luokassa: ${maxHorsesPerRiderInClass}",
+        maxHorsesPerClass: "Maksimi osallistujia per Luokka: ${maxHorsesPerClass}",
+        maxClassesPerHorse: "Maksimi luokkia per osallistuja: ${maxClassesPerHorse}",
+        maxHorsesPerRiderInClass: "Maksimi osallistujia per omistaja Luokassa: ${maxHorsesPerRiderInClass}",
         eventInfoTitle: "Tapahtumatiedot",
         eventRulesTitle: "Säännöt",
         registerForEvent: "Ilmoittaudu Tapahtumaan",
-        ridersName: "Ratsastajan Nimi:",
+        ridersName: "Omistajan nimi:",
         submitButton: "Lähetä",
         participantsResultsTitle: "Osallistujat ja Tulokset",
-        placeholderHorseName: "Hevosen nimi"
+        placeholderHorseName: "Osallistujan nimi"
     }
 };
