@@ -1,11 +1,13 @@
-const ENV = "development"; // Default to "development" for local testing
+// Auto-detect environment based on hostname
+const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+const ENV = isLocalhost ? "development" : "production";
 
 const CONFIG = {
   development: {
-    BASE_URL: "backend"
+    BASE_URL: "backend" // For local development
   },
   production: {
-    BASE_URL: "__PRODUCTION_BASE_URL__" // Placeholder to be replaced in GitHub Actions
+    BASE_URL: "/backend" // Relative URL that should work if frontend and backend are on same domain
   }
 };
 
