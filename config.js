@@ -7,7 +7,7 @@ const CONFIG = {
     BASE_URL: "backend" // For local development
   },
   production: {
-    BASE_URL: "/backend" // Relative URL that should work if frontend and backend are on same domain
+    BASE_URL: "__PRODUCTION_BASE_URL__" // Relative URL that should work if frontend and backend are on same domain
   }
 };
 
