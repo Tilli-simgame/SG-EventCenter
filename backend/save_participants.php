@@ -1,5 +1,5 @@
 <?php
-// require '../vendor/autoload.php';
+require '../vendor/autoload.php';
 
 // jos haluat käyttää sähköpostiin lähetystä, poista kahdesta alla olevasta rivistä kommentoinnit pois
 // $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
