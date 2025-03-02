@@ -96,343 +96,395 @@
     <script src="config.js"></script>
     <script src="translations.js"></script>
     <script>
+// Translation function
+function translate(key, replacements = {}, language = 'en') {
+    const translation = translations[language][key] || translations['en'][key] || '';
+    return translation.replace(/\${(.*?)}/g, (_, k) => replacements[k] || '');
+}
 
-        // Translation function
-        function translate(key, replacements = {}, language = 'en') {
-            const translation = translations[language][key] || translations['en'][key] || '';
-            return translation.replace(/\${(.*?)}/g, (_, k) => replacements[k] || '');
-        }
+function formatDate(dateStr) {
+    const [year, month, day] = dateStr.split('-').map(num => parseInt(num));
+    const date = new Date(year, month - 1, day); // month is 0-based in JavaScript
+    return date.toLocaleDateString('fi-FI');
+}
 
-        function formatDate(dateStr) {
-            const [year, month, day] = dateStr.split('-').map(num => parseInt(num));
-            const date = new Date(year, month - 1, day); // month is 0-based in JavaScript
-            return date.toLocaleDateString('fi-FI');
-        }
+function isRegistrationClosed(lastDateStr) {
+    // Get current date at midnight for fair comparison
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    // Parse the YYYY-MM-DD date
+    const [year, month, day] = lastDateStr.split('-').map(num => parseInt(num));
+    const lastDate = new Date(year, month - 1, day); // month is 0-based in JavaScript
+    
+    return currentDate > lastDate;
+}
 
-        function isRegistrationClosed(lastDateStr) {
-            // Get current date at midnight for fair comparison
-            const currentDate = new Date();
-            currentDate.setHours(0, 0, 0, 0);
-            
-            // Parse the YYYY-MM-DD date
-            const [year, month, day] = lastDateStr.split('-').map(num => parseInt(num));
-            const lastDate = new Date(year, month - 1, day); // month is 0-based in JavaScript
-            
-            return currentDate > lastDate;
-        }
+function getNumberToBold(totalParticipants) {
+    if (totalParticipants <= 3) return 1;
+    if (totalParticipants <= 8) return 2;
+    if (totalParticipants <= 15) return 3;
+    if (totalParticipants <= 24) return 4;
+    if (totalParticipants <= 35) return 5;
+    if (totalParticipants <= 48) return 6;
+    if (totalParticipants <= 63) return 7;
+    if (totalParticipants <= 80) return 8;
+    if (totalParticipants <= 99) return 9;
+    return 10;
+}
 
-        function getNumberToBold(totalParticipants) {
-                if (totalParticipants <= 3) return 1;
-                if (totalParticipants <= 8) return 2;
-                if (totalParticipants <= 15) return 3;
-                if (totalParticipants <= 24) return 4;
-                if (totalParticipants <= 35) return 5;
-                if (totalParticipants <= 48) return 6;
-                if (totalParticipants <= 63) return 7;
-                if (totalParticipants <= 80) return 8;
-                if (totalParticipants <= 99) return 9;
-                return 10;
-            }
-
-            function applyStaticTranslations(language = 'fi') {
-        document.getElementById('event-info-title').innerText = translate('eventInfoTitle', {}, language);
-        document.getElementById('event-rules-title').innerText = translate('eventRulesTitle', {}, language);
-        document.getElementById('register-for-the-event').innerText = translate('registerForEvent', {}, language);
-        document.querySelector('label[for="rider_name"]').innerText = translate('ridersName', {}, language);
-        document.querySelector('button[type="submit"]').innerText = translate('submitButton', {}, language);
-        document.getElementById('participants-results-title').innerText = translate('participantsResultsTitle', {}, language);
-        //document.getElementById('horse-name').innerText = translate('horseName', {}, language);
+function applyStaticTranslations(language = 'fi') {
+    document.getElementById('event-info-title').innerText = translate('eventInfoTitle', {}, language);
+    document.getElementById('event-rules-title').innerText = translate('eventRulesTitle', {}, language);
+    document.getElementById('register-for-the-event').innerText = translate('registerForEvent', {}, language);
+    document.querySelector('label[for="rider_name"]').innerText = translate('ridersName', {}, language);
+    document.querySelector('button[type="submit"]').innerText = translate('submitButton', {}, language);
+    document.getElementById('participants-results-title').innerText = translate('participants', {}, language);
+    
+    // Check if results-title exists
+    const resultsTitle = document.getElementById('results-title');
+    if (resultsTitle) {
+        resultsTitle.innerText = translate('results', {}, language);
     }
+}
 
-        async function fetchEventData(eventName, language = 'fi') {
-            try {
-                // First check if results need to be generated
-                const checkResponse = await fetch(window.API_URL + `/check_results.php?event=${eventName}`);
-                const checkData = await checkResponse.json();
-                
-                if (checkData.error) {
-                    showError(checkData.error);
-                    return;
-                }
-                
-                // Use the updated event data
-                const data = checkData.eventData;
-                
-                const formattedDate = formatDate(data.date);
-                const lastEntryDate = formatDate(data.lastDate);
-
-                // Populate event information
-                document.getElementById('event-title').innerText = translate('title', { date: formattedDate }, language);
-                document.getElementById('event-date').innerText = translate('eventDate', { date: formattedDate }, language);
-                document.getElementById('last-entry-date').innerText = translate('lastEntryDate', { lastDate: lastEntryDate }, language);
-                
-                // Display event info
-                const infoDiv = document.getElementById('event-info');
-                infoDiv.innerHTML = `
-                    <li class="list-group-item">${translate('organizer', { organizer: data.organizer }, language)}</li>
-                    <li class="list-group-item">${translate('email', { email: data.organizerEmail }, language)}</li>
-                    <li class="list-group-item">${translate('association', { association: data.assoc }, language)}</li>
-                    <li class="list-group-item">${translate('location', { location: data.location, url: data.locationUrl }, language)}</li>
-                    <li class="list-group-item">${translate('eventType', { type: data.type }, language)}</li>
-                `;
-                
-                // Display rules
-                const rulesDiv = document.getElementById('event-rules');
-                rulesDiv.innerHTML = `
-                    <li class="list-group-item">${translate('maxHorsesPerClass', { maxHorsesPerClass: data.rules.maxHorsesPerClass }, language)}</li>
-                    <li class="list-group-item">${translate('maxClassesPerHorse', { maxClassesPerHorse: data.rules.maxClassesPerHorse }, language)}</li>
-                    <li class="list-group-item">${translate('maxHorsesPerRiderInClass', { maxHorsesPerRiderInClass: data.rules.maxHorsesPerRiderInClass }, language)}</li>
-                `;
-                
-                // Create class sections
-                const classContainer = document.getElementById('class-containers');
-                classContainer.innerHTML = ''; // Clear existing content
-                Object.entries(data.classes).forEach(([className, participants]) => {
-                    const classSection = createClassSection(
-                        className, 
-                        data.rules.maxHorsesPerRiderInClass,
-                        participants.length,
-                        data.rules.maxHorsesPerClass,
-                        language
-                    );
-                    classContainer.appendChild(classSection);
-                });
-                
-                // Display participants
-                displayParticipants(data);
-                
-                // Check if registration period has ended
-                if (isRegistrationClosed(data.lastDate)) {
-                    const form = document.getElementById('registrationForm');
-                    form.querySelectorAll('input, button').forEach(element => {
-                        element.disabled = true;
-                    });
-                    form.insertAdjacentHTML('beforebegin', 
-                        '<div class="alert alert-warning">Registration period has ended</div>'
-                    );
-                }
-                
-            } catch (error) {
-                showError('Error loading event data');
-                console.error(error);
-            }
+async function fetchEventData(eventName, language = 'fi') {
+    try {
+        // First check if results need to be generated
+        const checkResponse = await fetch(window.API_URL + `/check_results.php?event=${eventName}`);
+        const checkData = await checkResponse.json();
+        
+        if (checkData.error) {
+            showError(checkData.error);
+            return;
         }
+        
+        // Use the updated event data
+        const data = checkData.eventData;
+        
+        const formattedDate = formatDate(data.date);
+        const lastEntryDate = formatDate(data.lastDate);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get event data from URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const eventName = urlParams.get('event');
-            const languageSelector = document.getElementById('languageSelector');
-
-            if (!eventName) {
-                showError('No event specified');
-                return;
-            }
-
-            document.getElementById('event_name').value = eventName;
-
-            // Fetch event data
-            fetchEventData(eventName, languageSelector.value);
-            applyStaticTranslations(languageSelector.value);
-
-            // Handle language change
-        languageSelector.addEventListener('change', () => {
-            const selectedLanguage = languageSelector.value;
-            fetchEventData(eventName, selectedLanguage);
-            applyStaticTranslations(selectedLanguage);
+        // Populate event information
+        document.getElementById('event-title').innerText = translate('title', { date: formattedDate }, language);
+        document.getElementById('event-date').innerText = translate('eventDate', { date: formattedDate }, language);
+        document.getElementById('last-entry-date').innerText = translate('lastEntryDate', { lastDate: lastEntryDate }, language);
+        
+        // Display event info
+        const infoDiv = document.getElementById('event-info');
+        infoDiv.innerHTML = `
+            <li class="list-group-item">${translate('organizer', { organizer: data.organizer }, language)}</li>
+            <li class="list-group-item">${translate('email', { email: data.organizerEmail }, language)}</li>
+            <li class="list-group-item">${translate('association', { association: data.assoc }, language)}</li>
+            <li class="list-group-item">${translate('location', { location: data.location, url: data.locationUrl }, language)}</li>
+            <li class="list-group-item">${translate('eventType', { type: data.type }, language)}</li>
+        `;
+        
+        // Display rules
+        const rulesDiv = document.getElementById('event-rules');
+        rulesDiv.innerHTML = `
+            <li class="list-group-item">${translate('maxHorsesPerClass', { maxHorsesPerClass: data.rules.maxHorsesPerClass }, language)}</li>
+            <li class="list-group-item">${translate('maxClassesPerHorse', { maxClassesPerHorse: data.rules.maxClassesPerHorse }, language)}</li>
+            <li class="list-group-item">${translate('maxHorsesPerRiderInClass', { maxHorsesPerRiderInClass: data.rules.maxHorsesPerRiderInClass }, language)}</li>
+        `;
+        
+        // Create class sections
+        const classContainer = document.getElementById('class-containers');
+        classContainer.innerHTML = ''; // Clear existing content
+        Object.entries(data.classes).forEach(([className, participants]) => {
+            const classSection = createClassSection(
+                className, 
+                data.rules.maxHorsesPerRiderInClass,
+                participants.length,
+                data.rules.maxHorsesPerClass,
+                language
+            );
+            classContainer.appendChild(classSection);
         });
-
-            // Form submission
-            document.getElementById('registrationForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Prepare form data
-                const formData = new FormData();
-                formData.append('event_name', document.getElementById('event_name').value);
-                formData.append('rider_name', document.getElementById('rider_name').value);
-                // formData.append('email', document.getElementById('email').value);
-                
-                // Collect all non-empty horse inputs
-                const classes = [];
-                const horses = [];
-                
-                document.querySelectorAll('.horse-input').forEach(input => {
-                    if (input.value.trim()) {
-                        classes.push(input.dataset.class);
-                        horses.push(input.value.trim());
-                    }
-                });
-                
-                // Append arrays to form data
-                horses.forEach((horse, index) => {
-                    formData.append('class[]', classes[index]);
-                    formData.append('horse[]', horse);
-                });
-                
-                fetch(window.API_URL + '/save_participants.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        showError(data.error);
-                    } else {
-                        // Refresh the page to show updated participants
-                        location.reload();
-                    }
-                })
-                .catch(error => showError('Error saving registration'));
+        
+        // Display participants
+        displayParticipants(data, language);
+        
+        // Check if registration period has ended
+        if (isRegistrationClosed(data.lastDate)) {
+            const form = document.getElementById('registrationForm');
+            form.querySelectorAll('input, button').forEach(element => {
+                element.disabled = true;
             });
+            form.insertAdjacentHTML('beforebegin', 
+                `<div class="alert alert-warning">${translate('registrationClosed', {}, language) || 'Registration period has ended'}</div>`
+            );
+        }
+        
+    } catch (error) {
+        showError('Error loading event data');
+        console.error(error);
+    }
+}
+
+function createClassSection(className, maxHorsesPerRider, currentParticipants, maxParticipants, language) {
+    const section = document.createElement('div');
+    section.className = 'class-section mb-4';
+    
+    // Check if the class is full
+    const isClassFull = currentParticipants >= maxParticipants;
+    
+    // Create class title with counts
+    const classTitle = document.createElement('h4');
+    classTitle.innerText = `${className} (${currentParticipants}/${maxParticipants})`;
+    classTitle.classList.add('text-primary', 'mb-3');
+    
+    // Add visual indicator if the class is full
+    if (isClassFull) {
+        classTitle.classList.add('text-danger');
+        
+        // Add a "full" badge next to the title
+        classTitle.innerHTML += ' <span class="badge bg-danger ms-2">' + 
+            (translate('classFull', {}, language) || 'FULL') + '</span>';
+    }
+    
+    section.appendChild(classTitle);
+    
+    const inputsContainer = document.createElement('div');
+    inputsContainer.className = 'horse-inputs';
+    
+    // Create horse input fields
+    for (let i = 0; i < maxHorsesPerRider; i++) {
+        const inputDiv = document.createElement('div');
+        inputDiv.className = 'mb-2';
+        
+        const inputHTML = `
+            <input type="text" 
+                   class="form-control horse-input"
+                   placeholder="${translate('placeholderHorseName', {}, language) || 'Enter horse name'}" 
+                   data-class="${className}"
+                   ${isClassFull ? 'disabled' : ''}>
+        `;
+        
+        inputDiv.innerHTML = inputHTML;
+        inputsContainer.appendChild(inputDiv);
+    }
+    
+    // If the class is full, add a notice
+    if (isClassFull) {
+        const fullNotice = document.createElement('div');
+        fullNotice.className = 'alert alert-warning mt-2';
+        fullNotice.innerText = translate('classFullText', {}, language) || 'This class has reached maximum capacity';
+        inputsContainer.appendChild(fullNotice);
+    }
+    
+    section.appendChild(inputsContainer);
+    return section;
+}
+
+function displayParticipants(data, language) {
+    const container = document.getElementById('participants');
+    container.innerHTML = '';
+
+    // Display registered participants
+    Object.entries(data.classes).forEach(([className, participants]) => {
+        const classDiv = document.createElement('div');
+        classDiv.className = 'mb-4';
+        
+        // Check if class is full
+        const isClassFull = participants.length >= data.rules.maxHorsesPerClass;
+        
+        // Create class header with participant count
+        const header = document.createElement('h3');
+        header.innerHTML = `${className} (${participants.length}/${data.rules.maxHorsesPerClass})`;
+        header.classList.add('text-primary');
+        
+        // Add visual indicator if the class is full
+        if (isClassFull) {
+            header.classList.add('text-danger');
+            header.innerHTML += ` <span class="badge bg-danger ms-2">${translate('classFull', {}, language) || 'FULL'}</span>`;
+        }
+        
+        classDiv.appendChild(header);
+
+        const list = document.createElement('ul');
+        list.className = 'list-group';
+        
+        participants.forEach(p => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item';
+            li.textContent = `${p.rider} - ${p.horse}`;
+            list.appendChild(li);
         });
 
-        function createClassSection(className, maxHorsesPerRider, currentParticipants, maxParticipants, language) {
-            const section = document.createElement('div');
-            section.className = 'class-section mb-4';
-            
-            // Create class title with counts
-            const classTitle = document.createElement('h4');
-            classTitle.innerText = `${className} (${currentParticipants}/${maxParticipants})`;
-            classTitle.classList.add('text-primary', 'mb-3');
-            section.appendChild(classTitle);
-            
-            const inputsContainer = document.createElement('div');
-            inputsContainer.className = 'horse-inputs';
-            
-            // Create horse input fields
-            for (let i = 0; i < maxHorsesPerRider; i++) {
-                const inputDiv = document.createElement('div');
-                inputDiv.className = 'mb-2';
-                inputDiv.innerHTML = `
-                    <input type="text" 
-                           class="form-control horse-input"
-                           placeholder="${translate('placeholderHorseName', {}, language)}" 
-                           data-class="${className}">
-                `;
-                inputsContainer.appendChild(inputDiv);
-            }
-            
-            section.appendChild(inputsContainer);
-            return section;
-        }
+        classDiv.appendChild(list);
+        container.appendChild(classDiv);
+    });
 
-        function displayParticipants(data) {
-            const container = document.getElementById('participants');
-            container.innerHTML = '';
+    // Display results if available
+    if (data.results && Object.keys(data.results).length > 0) {
+        const resultsDiv = document.createElement('div');
+        resultsDiv.innerHTML = `<h2 id="results-title">${translate('results', {}, language) || 'Results'}</h2>`;
 
-            // Display registered participants
-            Object.entries(data.classes).forEach(([className, participants]) => {
-                const classDiv = document.createElement('div');
-                classDiv.className = 'mb-4';
-                
-                // Create class header with participant count
+        Object.entries(data.results).forEach(([className, results]) => {
+            // Check ruleSet and display results accordingly
+            if (data.ruleSet === "toko") {
+                // Group results by award
+                const groupedResults = results.reduce((groups, result) => {
+                    if (!groups[result.award]) {
+                        groups[result.award] = [];
+                    }
+                    groups[result.award].push(result);
+                    return groups;
+                }, {});
+
+                // Create a section for the class
+                const classResults = document.createElement('div');
+                classResults.className = 'mb-4';
+
                 const header = document.createElement('h3');
-                header.innerText = `${className} (${participants.length}/${data.rules.maxHorsesPerClass})`;
+                header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
                 header.classList.add('text-primary');
-                classDiv.appendChild(header);
+                classResults.appendChild(header);
+
+                // Display grouped and sorted results by award
+                Object.entries(groupedResults)
+                    .sort(([awardA], [awardB]) => awardA.localeCompare(awardB)) // Optional: Sort awards alphabetically
+                    .forEach(([award, group]) => {
+                        const awardHeader = document.createElement('h4');
+                        awardHeader.innerText = `${award}`;
+                        awardHeader.classList.add('text-secondary', 'mt-3');
+                        classResults.appendChild(awardHeader);
+
+                        const list = document.createElement('ul');
+                        list.className = 'list-group';
+
+                        // Sort by points within each award group
+                        group.sort((a, b) => b.points - a.points);
+
+                        group.forEach((r) => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item';
+                            li.innerHTML = `${r.rider} (${r.points})`;
+                            list.appendChild(li);
+                        });
+
+                        classResults.appendChild(list);
+                    });
+
+                resultsDiv.appendChild(classResults);
+            } else {
+                // Default display logic for non-TOKO ruleSet
+                const numToBold = getNumberToBold(results.length);
+
+                const classResults = document.createElement('div');
+                classResults.className = 'mb-4';
+
+                const header = document.createElement('h3');
+                header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
+                header.classList.add('text-primary');
+                classResults.appendChild(header);
 
                 const list = document.createElement('ul');
                 list.className = 'list-group';
-                
-                participants.forEach(p => {
+
+                results.forEach((r, index) => {
                     const li = document.createElement('li');
                     li.className = 'list-group-item';
-                    li.textContent = `${p.rider} - ${p.horse}`;
+                    li.innerHTML = `${r.place}. ${index < numToBold ? '<strong>' : ''}${r.rider} - ${r.horse}${index < numToBold ? '</strong>' : ''}`;
                     list.appendChild(li);
                 });
 
-                classDiv.appendChild(list);
-                container.appendChild(classDiv);
-            });
+                classResults.appendChild(list);
+                resultsDiv.appendChild(classResults);
+            }
+        });
 
-            // Display results if available
-            // Display results if available
-if (data.results && Object.keys(data.results).length > 0) {
-    const resultsDiv = document.createElement('div');
-    resultsDiv.innerHTML = '<h2>Results</h2>';
+        container.appendChild(resultsDiv);
+    }
+}
 
-    Object.entries(data.results).forEach(([className, results]) => {
-        // Check ruleSet and display results accordingly
-        if (data.ruleSet === "toko") {
-            // Group results by award
-            const groupedResults = results.reduce((groups, result) => {
-                if (!groups[result.award]) {
-                    groups[result.award] = [];
-                }
-                groups[result.award].push(result);
-                return groups;
-            }, {});
+function showError(message) {
+    document.getElementById('modal-error-message').textContent = message;
+    new bootstrap.Modal(document.getElementById('errorModal')).show();
+}
 
-            // Create a section for the class
-            const classResults = document.createElement('div');
-            classResults.className = 'mb-4';
+document.addEventListener('DOMContentLoaded', function() {
+    // Add translations for the full class feature
+    if (!translations.en) translations.en = {};
+    if (!translations.fi) translations.fi = {};
+    
+    // English translations
+    translations.en.classFull = "FULL";
+    translations.en.classFullText = "This class has reached maximum capacity";
+    translations.en.registrationClosed = "Registration period has ended";
+    
+    // Finnish translations
+    translations.fi.classFull = "TÄYNNÄ";
+    translations.fi.classFullText = "Tämä luokka on saavuttanut enimmäiskapasiteettinsa";
+    translations.fi.registrationClosed = "Ilmoittautumisaika on päättynyt";
+    
+    // Get event data from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventName = urlParams.get('event');
+    const languageSelector = document.getElementById('languageSelector');
 
-            const header = document.createElement('h3');
-            header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
-            header.classList.add('text-primary');
-            classResults.appendChild(header);
+    if (!eventName) {
+        showError('No event specified');
+        return;
+    }
 
-            // Display grouped and sorted results by award
-            Object.entries(groupedResults)
-                .sort(([awardA], [awardB]) => awardA.localeCompare(awardB)) // Optional: Sort awards alphabetically
-                .forEach(([award, group]) => {
-                    const awardHeader = document.createElement('h4');
-                    awardHeader.innerText = `${award}`;
-                    awardHeader.classList.add('text-secondary', 'mt-3');
-                    classResults.appendChild(awardHeader);
+    document.getElementById('event_name').value = eventName;
 
-                    const list = document.createElement('ul');
-                    list.className = 'list-group';
+    // Fetch event data
+    fetchEventData(eventName, languageSelector.value);
+    applyStaticTranslations(languageSelector.value);
 
-                    // Sort by points within each award group
-                    group.sort((a, b) => b.points - a.points);
-
-                    group.forEach((r) => {
-                        const li = document.createElement('li');
-                        li.className = 'list-group-item';
-                        li.innerHTML = `${r.rider} (${r.points})`;
-                        list.appendChild(li);
-                    });
-
-                    classResults.appendChild(list);
-                });
-
-            resultsDiv.appendChild(classResults);
-        } else {
-            // Default display logic for non-TOKO ruleSet
-            const numToBold = getNumberToBold(data.results[className].length);
-
-            const classResults = document.createElement('div');
-            classResults.className = 'mb-4';
-
-            const header = document.createElement('h3');
-            header.innerText = `${className} (${results.length}/${data.rules.maxHorsesPerClass})`;
-            header.classList.add('text-primary');
-            classResults.appendChild(header);
-
-            const list = document.createElement('ul');
-            list.className = 'list-group';
-
-            results.forEach((r, index) => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.innerHTML = `${r.place}. ${index < numToBold ? '<strong>' : ''}${r.rider} - ${r.horse}${index < numToBold ? '</strong>' : ''}`;
-                list.appendChild(li);
-            });
-
-            classResults.appendChild(list);
-            resultsDiv.appendChild(classResults);
-        }
+    // Handle language change
+    languageSelector.addEventListener('change', () => {
+        const selectedLanguage = languageSelector.value;
+        fetchEventData(eventName, selectedLanguage);
+        applyStaticTranslations(selectedLanguage);
     });
 
-    container.appendChild(resultsDiv);
-}
-        }
-
-        function showError(message) {
-            document.getElementById('modal-error-message').textContent = message;
-            new bootstrap.Modal(document.getElementById('errorModal')).show();
-        }
+    // Form submission
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('event_name', document.getElementById('event_name').value);
+        formData.append('rider_name', document.getElementById('rider_name').value);
+        // formData.append('email', document.getElementById('email').value);
+        
+        // Collect all non-empty horse inputs
+        const classes = [];
+        const horses = [];
+        
+        document.querySelectorAll('.horse-input').forEach(input => {
+            if (input.value.trim()) {
+                classes.push(input.dataset.class);
+                horses.push(input.value.trim());
+            }
+        });
+        
+        // Append arrays to form data
+        horses.forEach((horse, index) => {
+            formData.append('class[]', classes[index]);
+            formData.append('horse[]', horse);
+        });
+        
+        fetch(window.API_URL + '/save_participants.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showError(data.error);
+            } else {
+                // Refresh the page to show updated participants
+                location.reload();
+            }
+        })
+        .catch(error => showError('Error saving registration'));
+    });
+});
     </script>
 </body>
 </html>

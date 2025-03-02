@@ -1,15 +1,24 @@
 {
-    "date": "2024-12-30",
-    "lastDate": "2024-12-28",
+    "date": "2025-03-09",
+    "lastDate": "2025-03-08",
     "classList": [
-        "01 He A",
-        "02 He A"
+        "01 Helppo D",
+        "02 Helppo C",
+        "03 Helppo B",
+        "04 KN Special",
+        "05 Helppo A",
+        "06 Vaativa B",
+        "07 Vaativa A",
+        "08 Prix St. Georges",
+        "09 Intermediate I",
+        "10 Intermediate II",
+        "11 Grand Prix"
     ],
     "assoc": "villit",
-    "location": "J\u00e4rjestyspaikka",
-    "locationUrl": "www.google.com",
-    "organizer": "J\u00e4rjest\u00e4j\u00e4n Nimi",
-    "organizerEmail": "j\u00e4rjest\u00e4j\u00e4n@maili.fi",
+    "location": "Oak Hill Event Park (OAKH4632)",
+    "locationUrl": "brave-pebble-03cbd9d03.5.azurestaticapps.net\/",
+    "organizer": "Tilli (VRL-00406)",
+    "organizerEmail": "virtuaali@proton.me",
     "type": "lyhyt arvonta",
     "ruleSet": "defualt",
     "rules": {
@@ -18,8 +27,76 @@
         "maxHorsesPerRiderInClass": 3
     },
     "classes": {
-        "01 He A": [],
-        "02 He A": []
+        "01 Helppo D": [
+            {
+                "rider": "Tilli",
+                "horse": "asd1"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "asd2"
+            },
+            {
+                "rider": "Tilli",
+                "horse": "asd3"
+            },
+            {
+                "rider": "Kakkonen",
+                "horse": "qewe4"
+            },
+            {
+                "rider": "Kakkonen",
+                "horse": "qweq5"
+            }
+        ],
+        "02 Helppo C": [],
+        "03 Helppo B": [],
+        "04 KN Special": [],
+        "05 Helppo A": [],
+        "06 Vaativa B": [],
+        "07 Vaativa A": [],
+        "08 Prix St. Georges": [],
+        "09 Intermediate I": [],
+        "10 Intermediate II": [],
+        "11 Grand Prix": []
     },
-    "results": {}
+    "results": {
+        "01 Helppo D": [
+            {
+                "place": 1,
+                "rider": "Tilli",
+                "horse": "asd2",
+                "points": 0,
+                "award": "Participation"
+            },
+            {
+                "place": 2,
+                "rider": "Kakkonen",
+                "horse": "qweq5",
+                "points": 0,
+                "award": "Participation"
+            },
+            {
+                "place": 3,
+                "rider": "Tilli",
+                "horse": "asd1",
+                "points": 0,
+                "award": "Participation"
+            },
+            {
+                "place": 4,
+                "rider": "Kakkonen",
+                "horse": "qewe4",
+                "points": 0,
+                "award": "Participation"
+            },
+            {
+                "place": 5,
+                "rider": "Tilli",
+                "horse": "asd3",
+                "points": 0,
+                "award": "Participation"
+            }
+        ]
+    }
 }

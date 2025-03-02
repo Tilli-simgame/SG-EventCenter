@@ -18,7 +18,8 @@ const translations = {
         registerForEvent: "Register for the Event",
         ridersName: "Owner's name:",
         submitButton: "Submit",
-        participantsResultsTitle: "Participants and Results",
+        participants: "Participants",
+        results: "Results",
         placeholderHorseName: "Participant's Name"
     },
     fi: {
@@ -30,15 +31,16 @@ const translations = {
         association: "Yhdistys: ${association}",
         location: "Sijainti: <a href='https://${url}' target='_blank'>${location}</a>",
         eventType: "Tapahtumatyyppi: ${type}",
-        maxHorsesPerClass: "Maksimi osallistujia per Luokka: ${maxHorsesPerClass}",
-        maxClassesPerHorse: "Maksimi luokkia per osallistuja: ${maxClassesPerHorse}",
-        maxHorsesPerRiderInClass: "Maksimi osallistujia per omistaja Luokassa: ${maxHorsesPerRiderInClass}",
+        maxHorsesPerClass: "Enintään osallistujia per luokka: ${maxHorsesPerClass}",
+        maxClassesPerHorse: "Enintään luokkia per osallistuja: ${maxClassesPerHorse}",
+        maxHorsesPerRiderInClass: "Enintään osallistujia per omistaja luokassa: ${maxHorsesPerRiderInClass}",
         eventInfoTitle: "Tapahtumatiedot",
         eventRulesTitle: "Säännöt",
-        registerForEvent: "Ilmoittaudu Tapahtumaan",
-        ridersName: "Omistajan nimi:",
+        registerForEvent: "Ilmoittaudu kisoihin",
+        ridersName: "Omistajan nimi: (nimimerkki (VRL-000000))",
         submitButton: "Lähetä",
-        participantsResultsTitle: "Osallistujat ja Tulokset",
+        participants: "Osallistujat",
+        results: "Tulokset",
         placeholderHorseName: "Osallistujan nimi"
     }
 };
