@@ -37,7 +37,7 @@ const translations = {
         eventInfoTitle: "Tapahtumatiedot",
         eventRulesTitle: "Säännöt",
         registerForEvent: "Ilmoittaudu kisoihin",
-        ridersName: "Omistajan nimi: (nimimerkki (VRL-000000))",
+        ridersName: "Omistajan nimimerkki: (nimimerkki (VRL-00000))",
         submitButton: "Lähetä",
         participants: "Osallistujat",
         results: "Tulokset",
