@@ -3,7 +3,7 @@ header('Content-Type: application/json');
 
 require_once 'result_generator.php';
 
-$storagePath = getenv('DATA_PATH') ?: '../data';
+$storagePath = is_dir('/events') ? '/events' : '../data';
 
 try {
     // Get event name from request

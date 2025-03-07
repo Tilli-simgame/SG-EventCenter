@@ -12,7 +12,7 @@ header('Content-Type: application/json');
 
 require_once 'result_generator.php';
 
-$storagePath = getenv('DATA_PATH') ?: '../data';
+$storagePath = is_dir('/events') ? '/events' : '../data';
 
 try {
     // Validate required fields
