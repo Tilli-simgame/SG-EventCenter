@@ -34,7 +34,7 @@ try {
     }
 
     // Load event data
-    $participantsFile = "$storagePath/$eventName.json";
+    $participantsFile = "../data/$eventName.json";
     if (!file_exists($participantsFile)) {
         throw new Exception('Event not found');
     }

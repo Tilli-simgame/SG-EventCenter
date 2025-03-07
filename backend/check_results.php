@@ -3,8 +3,6 @@ header('Content-Type: application/json');
 
 require_once 'result_generator.php';
 
-$storagePath = is_dir('/events') ? '/events' : '../data';
-
 try {
     // Get event name from request
     if (empty($_GET['event'])) {
@@ -12,7 +10,7 @@ try {
     }
     
     $eventName = $_GET['event'];
-    $participantsFile = "$storagePath/$eventName.json";
+    $participantsFile = "../data/$eventName.json";
     
     if (!file_exists($participantsFile)) {
         throw new Exception('Event not found');
