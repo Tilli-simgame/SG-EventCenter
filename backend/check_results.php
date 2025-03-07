@@ -10,7 +10,8 @@ try {
     }
     
     $eventName = $_GET['event'];
-    $participantsFile = "../data/$eventName.json";
+    $storagePath = is_dir('/events') ? '/events' : '../data';
+    $participantsFile = "$storagePath/$eventName.json";
     
     if (!file_exists($participantsFile)) {
         throw new Exception('Event not found');
