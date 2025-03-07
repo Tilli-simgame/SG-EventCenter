@@ -12,6 +12,8 @@ header('Content-Type: application/json');
 
 require_once 'result_generator.php';
 
+$storagePath = getenv('DATA_PATH') ?: '../data';
+
 try {
     // Validate required fields
     if (empty($_POST['event_name']) || empty($_POST['rider_name']) || 
@@ -32,7 +34,7 @@ try {
     }
 
     // Load event data
-    $participantsFile = "../data/$eventName.json";
+    $participantsFile = "$storagePath/$eventName.json";
     if (!file_exists($participantsFile)) {
         throw new Exception('Event not found');
     }
