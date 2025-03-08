@@ -50,6 +50,20 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
+  // Function to determine the data directory path
+  function getDataDirectoryPath() {
+    // In a real environment, we would check if /events directory exists
+    // Since we can't directly check directories in client-side JS, we'll use a simple approach
+
+    // Check if we're in production by looking for a URL parameter or hostname
+    // This is a simplified example - in a real app, you might use environment variables or other methods
+    const isProduction = window.location.hostname !== 'localhost' &&
+                        !window.location.hostname.includes('127.0.0.1') &&
+                        !window.location.hostname.includes('.local');
+
+    return isProduction ? '/events/' : 'data/';
+  }
+
   // Function to get all event files from the server
   async function getEventFiles() {
     try {
@@ -85,11 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Found event files:", eventFiles)
 
       const events = []
+      const dataPath = getDataDirectoryPath();
 
       // Fetch each event file
       for (const file of eventFiles) {
         try {
-          const response = await fetch(`data/${file}`)
+          const response = await fetch(`${dataPath}${file}`)
           if (!response.ok) {
             console.error(`Failed to fetch ${file}: ${response.status} ${response.statusText}`)
             continue
@@ -416,4 +431,3 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Oikeassa sovelluksessa tämä lataisi lisää tapahtumia palvelimelta.")
   })
 })
-

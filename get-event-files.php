@@ -3,7 +3,8 @@
 header('Content-Type: application/json');
 
 // Path to the data directory
-$dataDir = 'data/';
+$storagePath = is_dir('/events') ? '/events' : 'data/';
+$dataDir = $storagePath;
 
 // Get all JSON files from the data directory
 $files = glob($dataDir . '*.json');
