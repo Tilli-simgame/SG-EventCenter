@@ -56,17 +56,23 @@ document.addEventListener("DOMContentLoaded", () => {
     // Since we can't directly check directories in client-side JS, we'll use a simple approach
 
     // Check if we're in production by looking for a URL parameter or hostname
-    // This is a simplified example - in a real app, you might use environment variables or other methods
-    const isProduction = window.location.hostname !== 'localhost' &&
-                        !window.location.hostname.includes('127.0.0.1') &&
-                        !window.location.hostname.includes('.local');
+    const isProduction =
+      window.location.hostname !== "localhost" &&
+      !window.location.hostname.includes("127.0.0.1") &&
+      !window.location.hostname.includes(".local")
 
-    return isProduction ? '/events/' : 'data/';
+    // Log the environment and path for debugging
+    console.log(`Environment: ${isProduction ? "Production" : "Development"}`)
+    const path = isProduction ? "/events/" : "data/"
+    console.log(`Using data path: ${path}`)
+
+    return path
   }
 
   // Function to get all event files from the server
   async function getEventFiles() {
     try {
+      console.log("Fetching event files list from PHP script...")
       // Call the PHP script that lists all JSON files in the data directory
       const response = await fetch("get-event-files.php")
 
@@ -77,6 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await response.json()
+      console.log("PHP script response:", data)
       return data.files || []
     } catch (error) {
       console.error("Error fetching event files list:", error)
@@ -99,18 +106,24 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("Found event files:", eventFiles)
 
       const events = []
-      const dataPath = getDataDirectoryPath();
+      const dataPath = getDataDirectoryPath()
 
       // Fetch each event file
       for (const file of eventFiles) {
         try {
-          const response = await fetch(`${dataPath}${file}`)
+          const fileUrl = `${dataPath}${file}`
+          console.log(`Attempting to fetch file: ${fileUrl}`)
+
+          const response = await fetch(fileUrl)
+
           if (!response.ok) {
             console.error(`Failed to fetch ${file}: ${response.status} ${response.statusText}`)
             continue
           }
 
+          console.log(`Successfully fetched ${file}, parsing JSON...`)
           const eventData = await response.json()
+          console.log(`JSON parsed successfully for ${file}`)
 
           // Skip files that don't have the expected structure
           if (!eventData.classList || !Array.isArray(eventData.classList)) {
@@ -147,10 +160,14 @@ document.addEventListener("DOMContentLoaded", () => {
             originalData: eventData,
             fileName: file,
           })
+
+          console.log(`Successfully processed ${file}`)
         } catch (error) {
           console.error(`Error processing ${file}:`, error)
         }
       }
+
+      console.log(`Total events processed: ${events.length}`)
 
       // Sort events by date (closest first)
       events.sort((a, b) => {
@@ -329,8 +346,10 @@ document.addEventListener("DOMContentLoaded", () => {
     competitionsContainer.innerHTML = ""
 
     try {
+      console.log("Starting to fetch event data...")
       // Fetch events from JSON files
       const events = await fetchEventData()
+      console.log(`Fetched ${events.length} events`)
 
       if (events.length === 0) {
         allEventsContainer.innerHTML = '<div class="col-span-full text-center py-8">Ei tapahtumia saatavilla.</div>'
@@ -431,3 +450,4 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Oikeassa sovelluksessa tämä lataisi lisää tapahtumia palvelimelta.")
   })
 })
+
