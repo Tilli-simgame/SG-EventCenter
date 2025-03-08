@@ -1,49 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upcoming Competitions</title>
-</head>
-<body>
-
-    <h1>Current and Upcoming Events</h1>
-    <p>Testi</p>
-    <ul id="events-list">
-        <!-- The event list will be populated here dynamically -->
-    </ul>
-
-    <script>
-
-        fetch('backend/list_events.php')
-            .then(response => response.json())
-            .then(events => {
-                const eventsList = document.getElementById('events-list');
-                
-                events.forEach(event => {
-                    const listItem = document.createElement('li');
-                    
-                    // Create a link to the event's HTML page
-                    const eventLink = document.createElement('a');
-                    eventLink.href = `events/${event.htmlFile}`;
-                    eventLink.innerText = `${event.name} - Event Date: ${formatDate(event.date)} (Last Day to Enter: ${formatDate(event.lastDate)})`;
-
-                    // Append the link to the list item
-                    listItem.appendChild(eventLink);
-                    
-                    // Append the list item to the event list
-                    eventsList.appendChild(listItem);
-                });
-            })
-            .catch(error => console.error('Error fetching event list:', error));
-
-        // Helper function to format dates
-        function formatDate(dateStr) {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString();
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oak Hill Event Park</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#5c4c3a',
+            'primary-dark': '#3a3026',
+            'primary-light': '#8a7356',
+            secondary: '#e0d8c7',
+            light: '#f9f7f4',
+            muted: '#f0ece3',
+          }
         }
-    </script>
+      }
+    }
+  </script>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-secondary py-3">
+    <div class="container mx-auto px-4">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <img src="https://placehold.co/40x40" alt="Oak Hill Logo" class="rounded-full">
+          <h1 class="text-xl font-semibold text-primary">Oak Hill Event Park</h1>
+        </div>
+        <nav class="hidden md:flex">
+          <ul class="flex gap-6">
+            <li><a href="#" class="text-primary hover:text-primary-light font-medium">Etusivu</a></li>
+            <li><a href="#" class="text-primary hover:text-primary-light font-medium">Tapahtumat</a></li>
+            <li><a href="#" class="text-primary hover:text-primary-light font-medium">Tilat</a></li>
+            <li><a href="#" class="text-primary hover:text-primary-light font-medium">Yhteystiedot</a></li>
+          </ul>
+        </nav>
+        <button class="md:hidden" id="mobileMenuBtn">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+      <div class="hidden" id="mobileMenu">
+        <ul class="mt-3 space-y-2">
+          <li><a href="#" class="block py-2 text-primary">Etusivu</a></li>
+          <li><a href="#" class="block py-2 text-primary">Tapahtumat</a></li>
+          <li><a href="#" class="block py-2 text-primary">Tilat</a></li>
+          <li><a href="#" class="block py-2 text-primary">Kurssit</a></li>
+          <li><a href="#" class="block py-2 text-primary">Yhteystiedot</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
 
+  <!-- Hero Section -->
+  <section class="relative h-[500px] overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://placehold.co/1920x1080')] bg-cover bg-center brightness-75"></div>
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-4">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+        Oak Hill Event Park
+      </h1>
+      <p class="text-xl text-white max-w-2xl mb-8">
+        Ensiluokkainen ratsastuskeskus, joka järjestää näyttelyitä, kilpailuja ja kursseja sisä- ja ulkoareenoillamme
+      </p>
+    </div>
+  </section>
+
+  <!-- Event Listing Section -->
+  <section id="events" class="py-16 container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+      <div>
+        <h2 class="text-3xl font-bold text-primary mb-2">Tulevat tapahtumat</h2>
+        <p class="text-primary-light">Löydä ja ilmoittaudu seuraaviin tapahtumiin.</p>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+        <div class="flex items-center gap-2 bg-white rounded-md border border-secondary p-2 w-full sm:w-auto">
+          <i class="fas fa-filter text-primary-light"></i>
+          <select id="eventTypeFilter" class="bg-transparent border-0 focus:ring-0 text-primary w-full">
+            <option value="all">Kaikki tapahtumat</option>
+            <option value="show">Näyttelyt</option>
+            <option value="clinic">Kurssit</option>
+            <option value="competition">Kilpailut</option>
+            <option value="eventing">Kenttäkilpailut</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 bg-white rounded-md border border-secondary p-2 w-full sm:w-auto">
+          <i class="fas fa-calendar text-primary-light"></i>
+          <select id="dateFilter" class="bg-transparent border-0 focus:ring-0 text-primary w-full">
+            <option value="all">Kaikki päivämäärät</option>
+            <option value="upcoming">Tulevat</option>
+            <option value="this-week">Tällä viikolla</option>
+            <option value="this-month">Tässä kuussa</option>
+            <option value="next-month">Ensi kuussa</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Tabs -->
+    <div class="mb-6">
+      <div class="border-b border-secondary">
+        <ul class="flex flex-wrap -mb-px" id="eventTabs" role="tablist">
+          <li class="mr-2" role="presentation">
+            <button class="inline-block py-2 px-4 border-b-2 border-primary text-primary" id="all-tab" data-tab="all-events">Kaikki tapahtumat</button>
+          </li>
+          <li class="mr-2" role="presentation">
+            <button class="inline-block py-2 px-4 border-b-2 border-transparent hover:border-primary-light text-primary-light hover:text-primary" id="shows-tab" data-tab="shows">Näyttelyt</button>
+          </li>
+          <li class="mr-2" role="presentation">
+            <button class="inline-block py-2 px-4 border-b-2 border-transparent hover:border-primary-light text-primary-light hover:text-primary" id="clinics-tab" data-tab="clinics">Kurssit</button>
+          </li>
+          <li role="presentation">
+            <button class="inline-block py-2 px-4 border-b-2 border-transparent hover:border-primary-light text-primary-light hover:text-primary" id="competitions-tab" data-tab="competitions">Kilpailut</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div id="tabContent">
+      <div id="all-events" class="tab-panel">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="allEventsContainer">
+          <!-- Event cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+      <div id="shows" class="tab-panel hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="showsContainer">
+          <!-- Show event cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+      <div id="clinics" class="tab-panel hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="clinicsContainer">
+          <!-- Clinic event cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+      <div id="competitions" class="tab-panel hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="competitionsContainer">
+          <!-- Competition event cards will be inserted here by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <button id="loadMoreBtn" class="border border-primary-light text-primary hover:bg-muted px-6 py-2 rounded-md">
+        Lataa lisää tapahtumia
+      </button>
+    </div>
+  </section>
+
+  <!-- Facilities Section -->
+  <section class="py-16 bg-muted">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-primary mb-2">Tilat</h2>
+      <p class="text-primary-light mb-8">Maailmanluokan ratsastustilat kaikille lajeille</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg overflow-hidden border border-secondary hover:shadow-md transition-shadow">
+          <div class="h-48 overflow-hidden">
+            <img src="https://placehold.co/600x400" class="w-full h-full object-cover" alt="Sisäareena">
+          </div>
+          <div class="p-4">
+            <h5 class="text-lg font-semibold text-primary mb-1">Sisäareena</h5>
+            <p class="text-primary-light">Ilmastoitu 30m x 60m areena ensiluokkaisella pohjalla</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden border border-secondary hover:shadow-md transition-shadow">
+          <div class="h-48 overflow-hidden">
+            <img src="https://placehold.co/600x400" class="w-full h-full object-cover" alt="Ulkoareena">
+          </div>
+          <div class="p-4">
+            <h5 class="text-lg font-semibold text-primary mb-1">Ulkoareena</h5>
+            <p class="text-primary-light">60m x 90m kilpa-areena säänkestävällä pohjalla</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden border border-secondary hover:shadow-md transition-shadow">
+          <div class="h-48 overflow-hidden">
+            <img src="https://placehold.co/600x400" class="w-full h-full object-cover" alt="Tallit">
+          </div>
+          <div class="p-4">
+            <h5 class="text-lg font-semibold text-primary mb-1">Tallit</h5>
+            <p class="text-primary-light">120 pysyvää karsinaa pesupaikkoineen ja varustehuoneineen</p>
+          </div>
+        </div>
+        <div class="bg-white rounded-lg overflow-hidden border border-secondary hover:shadow-md transition-shadow">
+          <div class="h-48 overflow-hidden">
+            <img src="https://placehold.co/600x400" class="w-full h-full object-cover" alt="Maastorata">
+          </div>
+          <div class="p-4">
+            <h5 class="text-lg font-semibold text-primary mb-1">Maastorata</h5>
+            <p class="text-primary-light">Ammattimaisesti suunniteltu rata erilaisine esteineen</p>
+          </div>
+        </div>
+      </div>
+      
+      
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-primary-dark text-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-semibold mb-4">Oak Hill Tapahtumapuisto</h3>
+          <p class="text-secondary mb-4">
+            Ensiluokkainen ratsastuskeskus, joka järjestää näyttelyitä, kilpailuja ja kursseja.
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Pikalinkit</h3>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-secondary hover:text-white">Etusivu</a></li>
+            <li><a href="#" class="text-secondary hover:text-white">Tapahtumat</a></li>
+            <li><a href="#" class="text-secondary hover:text-white">Tilat</a></li>
+            <li><a href="#" class="text-secondary hover:text-white">Yhteystiedot</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Yhteystiedot</h3>
+          <address class="not-italic text-secondary">
+            <p>Oak Road 89347</p>
+            <p>VIRTUAALIMAAILMA</p>
+            <p>Sähköposti: virtuaali@proton.me</p>
+          </address>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-semibold mb-4">Aukioloajat</h3>
+          <ul class="text-secondary">
+            <li class="flex justify-between">
+              <span>Maanantai - Perjantai:</span>
+              <span>8:00 - 19:00</span>
+            </li>
+            <li class="flex justify-between">
+              <span>Lauantai:</span>
+              <span>7:00 - 20:00</span>
+            </li>
+            <li class="flex justify-between">
+              <span>Sunnuntai:</span>
+              <span>7:00 - 18:00</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-primary mt-8 pt-8 text-center text-secondary">
+        <p>&copy; <span id="currentYear"></span> Oak Hill Event Park. Tämä on virtuaalikisakeskus, kaikki sivuilla oleva on mielikuvitusta!</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Custom JavaScript -->
+  <script src="script.js"></script>
 </body>
 </html>

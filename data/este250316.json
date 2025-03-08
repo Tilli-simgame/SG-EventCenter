@@ -1,0 +1,51 @@
+{
+    "date": "2025-03-16",
+    "lastDate": "2025-03-16",
+    "classList": [
+        "01 Puomiluokka",
+        "02 40cm",
+        "03 50cm",
+        "04 60cm",
+        "05 70cm",
+        "06 80cm",
+        "07 90cm",
+        "08 100cm",
+        "09 110cm",
+        "10 120cm",
+        "11 130cm",
+        "12 140cm",
+        "13 150cm",
+        "14 160cm"
+    ]
+    ,
+    "assoc": "villit",
+    "eventType": "esteratsastus",
+    "location": "Oak Hill Event Park (OAKH4632)",
+    "locationUrl": "https://oakhilleventpark.azurewebsites.net",
+    "organizer": "Tilli (VRL-00406)",
+    "organizerEmail": "virtuaali@proton.me",
+    "type": "lyhyt arvonta",
+    "ruleSet": "defualt",
+    "rules": {
+        "maxHorsesPerClass": 50,
+        "maxClassesPerHorse": 2,
+        "maxHorsesPerRiderInClass": 3
+    },
+    "classes": {
+        "01 Puomiluokka": [],
+        "02 40cm": [],
+        "03 50cm": [],
+        "04 60cm": [],
+        "05 70cm": [],
+        "06 80cm": [],
+        "07 90cm": [],
+        "08 100cm": [],
+        "09 110cm": [],
+        "10 120cm": [],
+        "11 130cm": [],
+        "12 140cm": [],
+        "13 150cm": [],
+        "14 160cm": []
+    },
+    "results": []
+}

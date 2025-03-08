@@ -15,8 +15,9 @@
         "11 Grand Prix"
     ],
     "assoc": "villit",
+    "eventType": "kouluratsastus",
     "location": "Oak Hill Event Park (OAKH4632)",
-    "locationUrl": "brave-pebble-03cbd9d03.5.azurestaticapps.net",
+    "locationUrl": "https://oakhilleventpark.azurewebsites.net",
     "organizer": "Tilli (VRL-00406)",
     "organizerEmail": "virtuaali@proton.me",
     "type": "lyhyt arvonta",
