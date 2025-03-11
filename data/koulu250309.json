@@ -17,7 +17,7 @@
     "assoc": "villit",
     "eventType": "kouluratsastus",
     "location": "Oak Hill Event Park (OAKH4632)",
-    "locationUrl": "https://oakhilleventpark.azurewebsites.net",
+    "locationUrl": "https:\/\/oakhilleventpark.azurewebsites.net",
     "organizer": "Tilli (VRL-00406)",
     "organizerEmail": "virtuaali@proton.me",
     "type": "lyhyt arvonta",
@@ -50,5 +50,24 @@
             }
         ]
     },
-    "results": []
+    "results": {
+        "10 Intermediate II": [
+            {
+                "place": 1,
+                "rider": "Jeremias Susi",
+                "horse": "Bailador",
+                "points": 0,
+                "award": "Participation"
+            }
+        ],
+        "11 Grand Prix": [
+            {
+                "place": 1,
+                "rider": "Jeremias Susi",
+                "horse": "Bailador",
+                "points": 0,
+                "award": "Participation"
+            }
+        ]
+    }
 }

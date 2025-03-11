@@ -1,33 +1,24 @@
 <?php
 require '../vendor/autoload.php';
 
-// jos haluat käyttää sähköpostiin lähetystä, poista kahdesta alla olevasta rivistä kommentoinnit pois
-// $dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
-// $dotenv->load(); 
-
-// jotta voit lähettää sähköpostiin varmistusviestin sinulla tulee olla sendgridAPI key
-// $sendGridApiKey = $_ENV['SENDGRID_API_KEY'];
-
 header('Content-Type: application/json');
 
 require_once 'result_generator.php';
 
 try {
     // Validate required fields
-    if (empty($_POST['event_name']) || empty($_POST['rider_name']) || 
-        empty($_POST['class']) || empty($_POST['horse']) || 
-        !is_array($_POST['class']) || !is_array($_POST['horse'])) {
+    if (empty($_POST['event_name']) || 
+        empty($_POST['class']) || empty($_POST['participant']) || 
+        !is_array($_POST['class']) || !is_array($_POST['participant'])) {
         throw new Exception('Missing or invalid required fields');
     }
 
     $eventName = $_POST['event_name'];
-    $riderName = trim($_POST['rider_name']);
-    //$userEmail = trim($_POST['email']);
     $classes = $_POST['class'];
-    $horses = $_POST['horse'];
+    $participants = $_POST['participant'];
 
     // Validate arrays have same length
-    if (count($classes) !== count($horses)) {
+    if (count($classes) !== count($participants)) {
         throw new Exception('Invalid form data');
     }
 
@@ -55,15 +46,15 @@ try {
     $registrations = [];
     for ($i = 0; $i < count($classes); $i++) {
         $className = trim($classes[$i]);
-        $horseName = trim($horses[$i]);
+        $participantName = trim($participants[$i]);
 
-        if (empty($className) || empty($horseName)) {
+        if (empty($className) || empty($participantName)) {
             continue;
         }
 
         $registrations[] = [
             'class' => $className,
-            'horse' => $horseName
+            'participant' => $participantName
         ];
     }
 
@@ -80,69 +71,56 @@ try {
     }
 
     // Count and validate
-    $classHorseCount = [];
-    $riderClassHorseCount = [];
-    $horseClassCount = [];
-    $horsesInClass = [];
+    $classParticipantCount = [];
+    $participantClassCount = [];
+    $participantsInClass = [];
 
-    // Check new registrations for duplicate horses in same class
-    $newHorsesInClass = [];
+    // Check new registrations for duplicate participants in same class
+    $newParticipantsInClass = [];
     foreach ($registrations as $reg) {
-        if (!isset($newHorsesInClass[$reg['class']])) {
-            $newHorsesInClass[$reg['class']] = [];
+        if (!isset($newParticipantsInClass[$reg['class']])) {
+            $newParticipantsInClass[$reg['class']] = [];
         }
         
-        if (in_array(strtolower($reg['horse']), array_map('strtolower', $newHorsesInClass[$reg['class']]))) {
-            throw new Exception("Horse {$reg['horse']} is already being registered in class {$reg['class']}");
+        if (in_array(strtolower($reg['participant']), array_map('strtolower', $newParticipantsInClass[$reg['class']]))) {
+            throw new Exception("Participant {$reg['participant']} is already being registered in class {$reg['class']}");
         }
         
-        $newHorsesInClass[$reg['class']][] = $reg['horse'];
+        $newParticipantsInClass[$reg['class']][] = $reg['participant'];
     }
 
     // Count existing entries and check for duplicates
     foreach ($eventData['classes'] as $className => $entries) {
-        $classHorseCount[$className] = count($entries);
-        $horsesInClass[$className] = [];
+        $classParticipantCount[$className] = count($entries);
+        $participantsInClass[$className] = [];
         
         foreach ($entries as $entry) {
-            $riderClassHorseCount[$entry['rider']][$className] = 
-                ($riderClassHorseCount[$entry['rider']][$className] ?? 0) + 1;
-            $horseClassCount[$entry['horse']] = 
-                ($horseClassCount[$entry['horse']] ?? 0) + 1;
-            $horsesInClass[$className][] = strtolower($entry['horse']);
+            $participantClassCount[$entry['participant']] = 
+                ($participantClassCount[$entry['participant']] ?? 0) + 1;
+            $participantsInClass[$className][] = strtolower($entry['participant']);
         }
     }
 
     // Validate new registrations
     foreach ($registrations as $reg) {
-        // Check if horse is already in the class
-        if (in_array(strtolower($reg['horse']), $horsesInClass[$reg['class']] ?? [])) {
-            throw new Exception("Horse {$reg['horse']} is already registered in class {$reg['class']}");
+        // Check if participant is already in the class
+        if (in_array(strtolower($reg['participant']), $participantsInClass[$reg['class']] ?? [])) {
+            throw new Exception("Participant {$reg['participant']} is already registered in class {$reg['class']}");
         }
 
         // Check class capacity
-        $classHorseCount[$reg['class']] = 
-            ($classHorseCount[$reg['class']] ?? 0) + 1;
-        if ($classHorseCount[$reg['class']] > $eventData['rules']['maxHorsesPerClass']) {
+        $classParticipantCount[$reg['class']] = 
+            ($classParticipantCount[$reg['class']] ?? 0) + 1;
+        if ($classParticipantCount[$reg['class']] > $eventData['rules']['maxHorsesPerClass']) {
             throw new Exception("Class {$reg['class']} would exceed maximum capacity");
         }
 
-        // Check horses per rider in class
-        $riderClassHorseCount[$riderName][$reg['class']] = 
-            ($riderClassHorseCount[$riderName][$reg['class']] ?? 0) + 1;
-        if ($riderClassHorseCount[$riderName][$reg['class']] > 
-            $eventData['rules']['maxHorsesPerRiderInClass']) {
+        // Check classes per participant
+        $participantClassCount[$reg['participant']] = 
+            ($participantClassCount[$reg['participant']] ?? 0) + 1;
+        if ($participantClassCount[$reg['participant']] > $eventData['rules']['maxClassesPerHorse']) {
             throw new Exception(
-                "Exceeded maximum horses per rider in class {$reg['class']}"
-            );
-        }
-
-        // Check classes per horse
-        $horseClassCount[$reg['horse']] = 
-            ($horseClassCount[$reg['horse']] ?? 0) + 1;
-        if ($horseClassCount[$reg['horse']] > $eventData['rules']['maxClassesPerHorse']) {
-            throw new Exception(
-                "Horse {$reg['horse']} would exceed maximum classes"
+                "Participant {$reg['participant']} would exceed maximum classes"
             );
         }
     }
@@ -150,8 +128,7 @@ try {
     // All validations passed, add registrations
     foreach ($registrations as $reg) {
         $eventData['classes'][$reg['class']][] = [
-            'rider' => $riderName,
-            'horse' => $reg['horse']
+            'participant' => $reg['participant']
         ];
     }
 
@@ -166,47 +143,6 @@ try {
         throw new Exception('Failed to save registration data');
     }
 
-    // Email Validation and Sending via SendGrid
-    if (!empty($userEmail)) {
-
-      if (!$sendGridApiKey) {
-        die("SendGrid API key is not set.");
-      }
-
-      if (filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-          $emailContent = "Dear $riderName,\n\nThank you for registering for the event '$eventName'.\n\n";
-          $emailContent .= "Event Date: " . $eventData['date'] . "\n";
-          $emailContent .= "Last Day to Register: " . $eventData['lastDate'] . "\n";
-          $emailContent .= "Event URL: " . $_SERVER['HTTP_REFERER'] . "\n\n";
-          $emailContent .= "Classes and Horses:\n";
-          foreach ($registrations as $reg) {
-              $emailContent .= "- Class: {$reg['class']}, Horse: {$reg['horse']}\n";
-          }
-          $emailContent .= "\nBest Regards,\nThe Event Team";
-  
-          // Create a new Mail object, here named $mail instead of $email
-          $mail = new \SendGrid\Mail\Mail();
-          $mail->setFrom("tilli.sim@pm.me", "Oak Hill Event Park");
-          $mail->setSubject("Registration Confirmation for $eventName");
-          $mail->addTo($userEmail, $riderName);
-          $mail->addContent("text/plain", $emailContent);
-  
-          $sendgrid = new \SendGrid($sendGridApiKey);
-  
-          try {
-              $response = $sendgrid->send($mail);
-              if ($response->statusCode() >= 400) {
-                  throw new Exception("Failed to send email: " . $response->statusCode());
-              }
-          } catch (Exception $e) {
-              echo json_encode(['error' => 'Failed to send confirmation email']);
-              exit;
-          }
-      } else {
-          echo json_encode(['error' => 'Invalid email format.']);
-          exit;
-      }
-  }
     echo json_encode([
         'success' => 'Registration successful',
         'resultsGenerated' => $resultsGenerated
@@ -216,5 +152,5 @@ try {
     http_response_code(400);
     echo json_encode(['error' => $e->getMessage()]);
 }
-
 ?>
+

@@ -1,0 +1,35 @@
+{
+    "date": "2025-03-29",
+    "lastDate": "2025-03-28",
+    "classList": [
+        "ALO",
+        "AVO",
+        "VOI",
+        "EVL"
+    ],
+    "assoc": "vTL",
+    "assocURL": "https://kultsu.net/virt/vtl",
+    "location": "Oak Hill Event Park (OAKH4632)",
+    "locationUrl": "https://oakhilleventpark.azurewebsites.net",
+    "organizer": "Tilli (VRL-00406)",
+    "organizerEmail": "virtuaali@proton.me",
+    "type": "lyhyt arvonta",
+    "ruleSet": "toko",
+    "rules": {
+        "maxHorsesPerClass": 30,
+        "maxClassesPerHorse": 1,
+        "maxHorsesPerRiderInClass": 3
+    },
+    "classes": {
+        "ALO": [
+        ],
+        "AVO": [
+        ],
+        "VOI": [
+        ],
+        "EVL": [
+        ]
+    },
+    "results": {
+    }
+}

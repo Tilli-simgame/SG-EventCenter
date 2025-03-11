@@ -49,18 +49,6 @@
                     <input type="hidden" name="honeypot" id="honeypot">
                     <input type="hidden" name="event_name" id="event_name">
                     
-                    <div class="mb-4">
-                        <label for="rider_name" class="form-label">Rider's Name:</label>
-                        <input type="text" class="form-control" id="rider_name" name="rider_name" required>
-                    </div>
-
-                    <!-- JOS haluat käyttää sähköpostiin varmistusviestin lähetystä, poista alla olevat kommentoinnit -->
-                    <!-- 
-                    <div class="mb-4">
-                      <label for="email" class="form-label">Email Address:</label>
-                      <input type="email" class="form-control" id="email" name="email" required>
-                  </div>-->
-
                     <div id="class-containers">
                         <!-- Class sections will be populated here -->
                     </div>
@@ -175,7 +163,7 @@ async function fetchEventData(eventName, language = 'fi') {
         infoDiv.innerHTML = `
             <li class="list-group-item">${translate('organizer', { organizer: data.organizer }, language)}</li>
             <li class="list-group-item">${translate('email', { email: data.organizerEmail }, language)}</li>
-            <li class="list-group-item">${translate('association', { association: data.assoc }, language)}</li>
+            <li class="list-group-item">${translate('association', { associationLink: data.assocURL ? `<a href="${data.assocURL}" target="_blank">${data.assoc}</a>` : data.assoc }, language)}</li>
             <li class="list-group-item">${translate('location', { location: data.location, url: data.locationUrl }, language)}</li>
             <li class="list-group-item">${translate('eventType', { type: data.type }, language)}</li>
         `;
@@ -245,35 +233,33 @@ function createClassSection(className, maxHorsesPerRider, currentParticipants, m
     
     section.appendChild(classTitle);
     
-    const inputsContainer = document.createElement('div');
-    inputsContainer.className = 'horse-inputs';
+    const inputContainer = document.createElement('div');
+    inputContainer.className = 'mb-3';
     
-    // Create horse input fields
-    for (let i = 0; i < maxHorsesPerRider; i++) {
-        const inputDiv = document.createElement('div');
-        inputDiv.className = 'mb-2';
-        
-        const inputHTML = `
-            <input type="text" 
-                   class="form-control horse-input"
-                   placeholder="${translate('placeholderHorseName', {}, language) || 'Enter horse name'}" 
-                   data-class="${className}"
-                   ${isClassFull ? 'disabled' : ''}>
-        `;
-        
-        inputDiv.innerHTML = inputHTML;
-        inputsContainer.appendChild(inputDiv);
-    }
+    const label = document.createElement('label');
+    label.htmlFor = `participants-${className.replace(/\s+/g, '-')}`;
+    label.className = 'form-label';
+    label.textContent = translate('participantsLabel', {}, language) || 'Participants (one per line):';
     
-    // If the class is full, add a notice
+    const textarea = document.createElement('textarea');
+    textarea.className = 'form-control participants-input';
+    textarea.id = `participants-${className.replace(/\s+/g, '-')}`;
+    textarea.setAttribute('data-class', className);
+    textarea.rows = 5;
+    textarea.placeholder = translate('placeholderParticipants', {}, language) || 'Enter participant names, one per line';
+    
     if (isClassFull) {
+        textarea.disabled = true;
         const fullNotice = document.createElement('div');
         fullNotice.className = 'alert alert-warning mt-2';
         fullNotice.innerText = translate('classFullText', {}, language) || 'This class has reached maximum capacity';
-        inputsContainer.appendChild(fullNotice);
+        inputContainer.appendChild(fullNotice);
     }
     
-    section.appendChild(inputsContainer);
+    inputContainer.appendChild(label);
+    inputContainer.appendChild(textarea);
+    section.appendChild(inputContainer);
+    
     return section;
 }
 
@@ -449,24 +435,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Prepare form data
         const formData = new FormData();
         formData.append('event_name', document.getElementById('event_name').value);
-        formData.append('rider_name', document.getElementById('rider_name').value);
-        // formData.append('email', document.getElementById('email').value);
         
-        // Collect all non-empty horse inputs
+        // Collect all non-empty participant inputs
         const classes = [];
-        const horses = [];
+        const participants = [];
         
-        document.querySelectorAll('.horse-input').forEach(input => {
-            if (input.value.trim()) {
-                classes.push(input.dataset.class);
-                horses.push(input.value.trim());
-            }
+        document.querySelectorAll('.participants-input').forEach(textarea => {
+            const className = textarea.getAttribute('data-class');
+            const lines = textarea.value.split('\n').filter(line => line.trim() !== '');
+            
+            lines.forEach(line => {
+                classes.push(className);
+                participants.push(line.trim());
+            });
         });
         
         // Append arrays to form data
-        horses.forEach((horse, index) => {
+        participants.forEach((participant, index) => {
             formData.append('class[]', classes[index]);
-            formData.append('horse[]', horse);
+            formData.append('participant[]', participant);
         });
         
         fetch(window.API_URL + '/save_participants.php', {
@@ -488,3 +475,4 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
